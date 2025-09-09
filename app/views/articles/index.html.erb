@@ -1,0 +1,69 @@
+<% content_for :title, "Articles" %>
+
+<div class="w-full">
+
+  <!-- Header -->
+  <% if current_user.present? %>
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="font-bold text-4xl">Articles</h1>
+      <%= link_to "New article", new_article_path,
+                  class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
+    </div>
+  <% end %>
+  <!-- Articles List -->
+  <div id="articles" class="min-w-full space-y-10">
+    <% if @articles.any? %>
+      <% @articles.each do |article| %>
+        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm group transition hover:shadow-md">
+
+          <!-- Author + Buttons -->
+          <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center space-x-2">
+              <% if article.user.profile_picture.attached? %>
+                <%= image_tag article.user.profile_picture, class: "h-7 w-7 rounded-full object-cover" %>
+              <% else %>
+                <div class="h-7 w-7 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-semibold">
+                  <%= article.user.name.first.upcase %>
+                </div>
+              <% end %>
+              <p class="text-sm text-gray-700 font-medium"><%= article.user.name %></p>
+              <span class="text-gray-400 text-xs">•</span>
+              <p class="text-xs text-gray-500"><%= time_ago_in_words(article.created_at) %> ago</p>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <%= link_to "Show", article, class: "rounded-md px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 font-medium" %>
+              <% if current_user.present? %>
+                <%= link_to "Edit", edit_article_path(article), class: "rounded-md px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 font-medium" %>
+                <%= button_to "Destroy", article, method: :delete,
+                              class: "rounded-md px-3 py-1.5 text-xs text-white bg-red-600 hover:bg-red-500 font-medium",
+                              data: { turbo_confirm: "Are you sure?" } %>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Topic -->
+          <span class="inline-block mb-2 px-2 py-0.5 text-xs font-medium rounded-full bg-blue-50 text-blue-600">
+            <%= " ##{article.topic.name}" %>
+          </span>
+
+          <!-- Title -->
+          <%= link_to article_path(article), class: "block" do %>
+            <h2 class="text-xl font-bold tracking-tight text-gray-900 group-hover:text-gray-700">
+              <%= article.title %>
+            </h2>
+          <% end %>
+
+          <!-- Summary -->
+          <p class="mt-2 text-sm text-gray-600">
+            <%= extract_summary_from_editorjs(article.content, length: 200) %>
+          </p>
+
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-center my-10">No articles found.</p>
+    <% end %>
+  </div>
+</div>

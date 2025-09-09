@@ -14,6 +14,15 @@ Rails.application.routes.draw do
   # password reset routes
   resources :password_resets, only: [:new, :create, :edit, :update,]
 
+  # article resources
+  resources :articles do
+    collection do
+      post :upload_image
+      post :fetch_image_url
+      post :upload_file
+    end
+  end
+
   # dashboard
-  root "dashboard#index"
+  root "articles#index"
 end

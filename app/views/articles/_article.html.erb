@@ -1,0 +1,37 @@
+<div id="<%= dom_id article %>" class="space-y-5">
+  <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+  <h1 class="text-4xl sm:text-5xl font-bold tracking-tight leading-tight text-gray-900 mb-6">
+    <%= article.title %>
+  </h1>
+  <!-- Author & Date -->
+  <div class="flex items-center space-x-3 mb-10">
+    <% if @article.user.profile_picture.attached? %>
+      <%= image_tag @article.user.profile_picture, class: "h-10 w-10 rounded-full object-cover" %>
+    <% end %>
+    <div>
+      <p class="text-sm font-semibold text-gray-800">
+        <%= @article.user.name %>
+      </p>
+      <p class="text-xs text-gray-500">
+        <%= @article.created_at.strftime("%B %d, %Y") %>
+      </p>
+    </div>
+  </div>
+  <div class="flex items-center space-x-2">
+    <span class="text-base font-medium text-gray-800">Topic name :</span>
+    <span class="inline-block bg-gray-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+      #<%= article.topic.name %>
+    </span>
+  </div>
+  <div>
+    <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+
+    <!--    <strong class="block font-medium mb-1">Content:</strong>-->
+<!--    <article class="prose lg:prose-xl max-w-none">-->
+      <%#= display_content(article.content) %>
+<!--    </article>-->
+    <article class="prose prose-lg lg:prose-xl max-w-none prose-headings:font-semibold prose-p:text-gray-800 prose-a:text-blue-600 hover:prose-a:text-blue-800 prose-strong:text-gray-900 prose-code:text-pink-600">
+      <%= display_content(article.content) %>
+    </article>
+  </div>
+</div>
