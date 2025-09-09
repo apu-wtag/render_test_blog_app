@@ -1,0 +1,52 @@
+<div class="max-w-3xl mx-auto mt-16 px-4">
+
+  <!-- Profile header -->
+  <div class="flex items-center space-x-6">
+    <% if @user.profile_picture.attached? %>
+      <%= image_tag @user.profile_picture, class: "w-32 h-32 rounded-full object-cover shadow-md" %>
+    <% else %>
+      <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-4xl font-bold">
+        <%= @user.user_name.first.upcase %>
+      </div>
+    <% end %>
+
+    <div class="flex-1">
+      <h1 class="text-4xl font-bold leading-tight"><%= @user.name %></h1>
+      <p class="text-gray-600 text-lg mt-1">@<%= @user.user_name %></p>
+      <% if current_user == @user %>
+        <div class="mt-4">
+          <%= link_to "Edit Profile", edit_user_path(@user), class: "px-4 py-2 bg-indigo-600 text-white rounded-full shadow hover:bg-indigo-700 text-sm font-medium" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Bio section -->
+  <% if @user.bio.present? %>
+    <div class="mt-10 prose prose-lg">
+      <p><%= @user.bio %></p>
+    </div>
+  <% end %>
+
+  <!-- Articles section -->
+  <div class="mt-12">
+    <h2 class="text-2xl font-bold mb-6">
+      Articles
+    </h2>
+
+    <% if @user.articles.any? %>
+      <div class="space-y-8">
+        <% @user.articles.each do |article| %>
+          <div>
+            <h3 class="text-xl font-semibold">
+              <%= link_to article.title, article_path(article), class: "hover:underline" %>
+            </h3>
+            <p class="text-gray-500 text-sm mt-1"><%= article.created_at.strftime("%B %d, %Y") %></p>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-gray-500 italic">This user hasn’t published any articles yet.</p>
+    <% end %>
+  </div>
+</div>

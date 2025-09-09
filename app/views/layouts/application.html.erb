@@ -35,19 +35,19 @@
     <script src="https://cdn.jsdelivr.net/gh/apu-wtag/editorjs-custom-code@master/dist/bundle.js"></script>
   </head>
 
-  <body class="bg-gray-50">
-  <nav class="bg-white shadow-sm">
+  <body >
+  <nav class="bg-gray-50 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex items-center">
-          <a href="/" class="font-bold text-lg text-indigo-600">Auth App</a>
+          <a href="/" class="font-bold text-lg text-indigo-600">Blog app final</a>
         </div>
         <div class="flex items-center space-x-4">
           <% if current_user.present? %>
             <% if current_user.profile_picture.attached? %>
               <%= image_tag current_user.profile_picture, class: "h-8 w-8 rounded-full" %>
             <% end %>
-            <span class="text-gray-700">Hello, <%= current_user.name %></span>
+            <span class="text-gray-700">Hello, <%= link_to "#{current_user.name}", user_path(current_user) %></span>
             <%= button_to "Logout", logout_path, method: :delete, class: "text-gray-700 hover:text-indigo-600" %>
           <% else %>
             <%= link_to "Sign Up", sign_up_path, class: "text-gray-700 hover:text-indigo-600" %>

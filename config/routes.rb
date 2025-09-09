@@ -6,6 +6,11 @@ Rails.application.routes.draw do
   # signup routes
   get "sign_up",to: "users#new"
   post "sign_up", to: "users#create"
+  resources :users, only: [ :show, :edit, :update] do
+    collection do
+      get :check_username
+    end
+  end
   # login routes
   get "login", to: "sessions#new"
   post "login", to: "sessions#create"
