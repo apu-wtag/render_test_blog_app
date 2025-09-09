@@ -1,0 +1,70 @@
+class User < ApplicationRecord
+  attr_accessor :remember_token, :reset_token
+  has_one_attached :profile_picture
+  has_secure_password
+
+  validates :name, presence: true
+  validates :email, presence: true, uniqueness: { case_sensitive: false },format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :password, presence: true, length: { minimum: 8 }, if: -> { :new_record? || !password.nil?}
+  validate :password_complexity, if: -> { :new_record? || !password.nil? }
+
+  has_many :articles, dependent: :destroy
+  def self.new_token
+    SecureRandom.urlsafe_base64(32)
+  end
+
+  def self.digest(string)
+    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
+    BCrypt::Password.create(string, cost: cost)
+  end
+
+  def remember
+    self.remember_token = User.new_token
+    #fixxxxx
+    update_attribute(:remember_digest, User.digest(remember_token))
+    update_attribute(:remember_expires_at, 30.days.from_now)
+  end
+
+  def create_reset_digest
+    self.reset_token = User.new_token
+    update_attribute(:reset_digest, User.digest(reset_token))
+    update_attribute(:reset_sent_at, Time.zone.now)
+  end
+
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago
+  end
+  def forget
+    update_attribute(:remember_digest, nil)
+    update_attribute(:remember_expires_at, nil)
+    # update_attribute(:session_token,nil)
+  end
+
+  def authenticated?(attribute, token)
+    digest = send("#{attribute}_digest")
+    return false if digest.nil?
+    BCrypt::Password.new(digest).is_password?(token)
+  end
+
+  def regenerate_session_token
+    update_attribute(:session_token, User.new_token)
+  end
+
+  private
+
+  def password_complexity
+    return if password.blank?
+    unless password.match?(/[a-z]/)
+      errors.add :password, "must include at least one lowercase letter"
+    end
+    unless password.match?(/[A-Z]/)
+      errors.add :password, "must include at least one uppercase letter"
+    end
+    unless password.match?(/\d/)
+      errors.add :password, "must include at least one digit"
+    end
+    unless password.match?(/[^A-Za-z\d]/)
+      errors.add :password, "must include at least one special character i.e. (*, #, $ etc)"
+    end
+  end
+end

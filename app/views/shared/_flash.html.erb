@@ -1,0 +1,10 @@
+<% flash.each_with_index do |(type, message), index| %>
+  <% next unless message.present? %>
+  <div class="flash-modal fixed top-4 left-4 z-50 opacity-100 transition-opacity duration-500 animate-fade-in mt-<%= index * 12 %>" role="alert" aria-labelledby="flash-title-<%= type %>">
+    <div class="flash-modal-content <%= flash_class_for(type) %> w-full max-w-xs">
+      <p id="flash-title-<%= type %>" class="font-semibold text-sm mb-1"><%= type.capitalize %></p>
+      <p class="text-sm"><%= message %></p>
+      <button type="button" class="absolute top-1 right-2 text-white hover:text-gray-200 text-lg" onclick="this.parentElement.parentElement.remove();">&times;</button>
+    </div>
+  </div>
+<% end %>

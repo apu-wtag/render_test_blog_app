@@ -1,0 +1,81 @@
+class ApplicationController < ActionController::Base
+  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
+  allow_browser versions: :modern
+  helper_method :current_user
+
+  private
+  def current_user
+    # return @current_user if defined?(@current_user)
+
+    if session[:user_id]
+      user = User.find_by(id: session[:user_id])
+      if user && session[:session_token] == user.session_token
+        @current_user ||= user
+      else
+        log_out_user
+        @current_user = nil
+      end
+    elsif (user_id = cookies.signed[:user_id])
+      user = User.find_by(id: user_id)
+      if user&.authenticated?("remember",cookies.signed[:remember_token])
+        reset_session
+        user.regenerate_session_token
+        session[:session_token] = user.session_token
+        session[:user_id] = user.id
+        @current_user = user
+      else
+        log_out_user
+        @current_user = nil
+      end
+    end
+  end
+
+  def log_out_user
+    # reset_session
+    session.delete(:user_id)
+    cookies.delete(:user_id)
+    cookies.delete(:remember_token)
+  end
+
+  def require_login
+    unless current_user
+      redirect_to login_path , alert: "You must be logged in to access this page."
+    end
+  end
+
+  def require_no_login
+    if current_user
+      redirect_to root_path, notice: "You are already logged in."
+    end
+  end
+
+  def log_out
+    forget(current_user) if current_user
+    reset_session
+    @current_user = nil
+  end
+
+  def remember(user)
+    user.remember
+    cookies.permanent.signed[:user_id] = {
+      value: user.id,
+      expires: 30.days.from_now,
+      secure: true,
+      http_only: true,
+      same_site: :lax
+    }
+    cookies.permanent.signed[:remember_token] = {
+      value: user.remember_token,
+      expires: 30.days.from_now,
+      secure: true,
+      http_only: true,
+      same_site: :lax
+    }
+  end
+
+  def forget(user)
+    user.forget
+    cookies.delete(:user_id)
+    cookies.delete(:remember_token)
+  end
+end

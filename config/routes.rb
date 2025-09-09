@@ -1,0 +1,19 @@
+require 'sidekiq/web'
+Rails.application.routes.draw do
+  get "up" => "rails/health#show", as: :rails_health_check
+  # sidekiq
+  mount Sidekiq::Web => '/sidekiq'
+  # signup routes
+  get "sign_up",to: "users#new"
+  post "sign_up", to: "users#create"
+  # login routes
+  get "login", to: "sessions#new"
+  post "login", to: "sessions#create"
+  delete "logout", to: "sessions#destroy"
+
+  # password reset routes
+  resources :password_resets, only: [:new, :create, :edit, :update,]
+
+  # dashboard
+  root "dashboard#index"
+end
