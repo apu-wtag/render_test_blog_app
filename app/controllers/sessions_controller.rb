@@ -4,13 +4,15 @@ class SessionsController < ApplicationController
     errors = []
   end
   def create
-    email = params[:session][:email]
+    email_or_username = params[:session][:login]
     password = params[:session][:password]
-    if email.blank? || password.blank?
+    if email_or_username.blank? || password.blank?
       flash.now[:danger] = "Email or password can\'t be blank."
       render :new, status: :unprocessable_entity and return
     end
-    user = User.find_by(email: email.downcase)
+    email_or_username.downcase!
+    # user = User.find_by(email: email_or_username) || User.find_by(user_name: email_or_username)
+    user = User.where("email = ? OR user_name = ?", email_or_username, email_or_username).first
     if user&.authenticate(password)
       reset_session
       user.regenerate_session_token

@@ -20,25 +20,17 @@ class PasswordResetsController < ApplicationController
   end
 
   def update
-    # puts" hiiiiiii "
     if params[:user][:password].empty?
-      # puts" holaaaaaaaa "
       @user.errors.add(:password, "can't be blank")
       render :edit, status: :unprocessable_entity and return
     elsif @user.update(user_params)
-      # puts "kireee"
       @user.regenerate_session_token
       @user.forget
       reset_session
-      #session[:user_id] = @user.id
-      #session[:session_token] = @user.session_token
       @user.update!(reset_digest: nil, reset_sent_at: nil)
-      # session.delete :user_id
-      # remember(@user)
       # puts  "Testing for debug"
       redirect_to login_path, notice: "Password successfully updated.Please login again."
     else
-      # puts "oooops"
       render :edit, status: :unprocessable_entity
     end
   end
@@ -51,15 +43,6 @@ class PasswordResetsController < ApplicationController
 
   end
   def valid_user
-    # # --- DEBUGGING LINES START ---
-    # puts "----------------------------------------"
-    # puts "DEBUG: User found by email: #{@user.email if @user}"
-    # puts "DEBUG: Token from URL (params[:id]): #{params[:id]}"
-    # if @user
-    #   puts "DEBUG: Does authenticated? check pass?: #{@user.authenticated?(:reset, params[:id])}"
-    # end
-    # puts "----------------------------------------"
-    # # --- DEBUGGING LINES END ---
     unless @user&.authenticated?(:reset, params[:id])
       redirect_to login_path, notice: "Invalid password reset link"
     end
@@ -73,7 +56,6 @@ class PasswordResetsController < ApplicationController
   def log_out_if_different_user
     if current_user && current_user.email.downcase != (params[:email] || params.dig(:user, :email))
       log_out
-      # @current_user = nil
       flash[:notice] = "You have been logged out to proceed with the password reset for the correct account"
     end
   end
