@@ -21,6 +21,9 @@ Rails.application.routes.draw do
 
   # article resources
   resources :articles do
+    member do
+      post :toggle_clap
+    end
     collection do
       post :upload_image
       post :fetch_image_url

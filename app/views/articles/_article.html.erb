@@ -18,7 +18,7 @@
       </p>
     </div>
   <% end %>
-
+  <!--Topic-->
   <div class="flex items-center space-x-2">
     <span class="text-base font-medium text-gray-800">Topic name :</span>
     <span class="inline-block bg-gray-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
@@ -26,12 +26,9 @@
     </span>
   </div>
   <div>
-    <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+  <%= render "articles/clap_button", article: article %>
 
-    <!--    <strong class="block font-medium mb-1">Content:</strong>-->
-<!--    <article class="prose lg:prose-xl max-w-none">-->
-      <%#= display_content(article.content) %>
-<!--    </article>-->
+    <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
     <article class="prose prose-lg lg:prose-xl max-w-none prose-headings:font-semibold prose-p:text-gray-800 prose-a:text-blue-600 hover:prose-a:text-blue-800 prose-strong:text-gray-900 prose-code:text-pink-600">
       <%= display_content(article.content) %>
     </article>

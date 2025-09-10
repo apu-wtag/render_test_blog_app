@@ -1,18 +1,21 @@
 class Article < ApplicationRecord
   extend FriendlyId
   friendly_id :title, use: [:slugged, :history]
-  has_many :article_blob_links, dependent: :destroy
-  has_many :blobs, through: :article_blob_links, source: :blob
-  belongs_to :topic
-  belongs_to :user
+  attr_writer :topic_name
+
   validates :topic, presence: true
   validates :title, presence: true
   validate :content_must_not_be_empty
-  attr_writer :topic_name
   before_validation :set_topic_from_name
   after_save :sync_blobs_from_content
-  # after_update :queue_orphaned_blob_cleanup, if: :saved_change_to_content?
-  # before_destroy :queue_all_blob_cleanup
+
+  has_many :article_blob_links, dependent: :destroy
+  has_many :blobs, through: :article_blob_links, source: :blob
+  has_many :claps, dependent: :destroy
+  has_many :clapped_users, through: :claps, source: :user
+  belongs_to :topic
+  belongs_to :user
+
   def topic_name
     @topic_name || self.topic&.name
   end

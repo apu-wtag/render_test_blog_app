@@ -4,7 +4,10 @@ class User < ApplicationRecord
   has_secure_password
 
   validates :name, presence: true
-  validates :user_name, presence: true, uniqueness: true
+  validates :user_name, presence: true, uniqueness: { case_sensitive: false },
+            format: { with: /\A[a-z0-9_]+\z/, message: "only allows letters, numbers, and underscores" },
+            length: { minimum: 3 }
+
   validates :bio, allow_blank: true, length: { maximum: 500 }
   validates :email, presence: true, uniqueness: { case_sensitive: false },format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, presence: true, length: { minimum: 8 }, if: -> { new_record? || !password.nil? }
@@ -12,6 +15,8 @@ class User < ApplicationRecord
 
 
   has_many :articles, dependent: :destroy
+  has_many :claps, dependent: :destroy
+  has_many :clapped_articles, through: :claps, source: :article
   def self.new_token
     SecureRandom.urlsafe_base64(32)
   end

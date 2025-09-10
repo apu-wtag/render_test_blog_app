@@ -1,6 +1,6 @@
 class ArticlesController < ApplicationController
   before_action :require_login, only: %i[ new create edit update destroy ]
-  before_action :set_article, only: %i[ show edit update destroy ]
+  before_action :set_article, only: %i[ show edit update destroy toggle_clap ]
 
   # GET /articles or /articles.json
   def index
@@ -59,16 +59,16 @@ class ArticlesController < ApplicationController
   end
 
   def upload_image
-    Rails.logger.info "---- DEBUG: RUNNING NEW UPLOAD_IMAGE METHOD ----"
+    # Rails.logger.info "---- DEBUG: RUNNING NEW UPLOAD_IMAGE METHOD ----"
     file = params[:file]
     if file
       blob = ActiveStorage::Blob.create_and_upload!(io: file, filename: file.original_filename)
-      Rails.logger.info "---- DEBUG: BLOB SIGNED ID IS: #{blob.signed_id} ----"
+      # Rails.logger.info "---- DEBUG: BLOB SIGNED ID IS: #{blob.signed_id} ----"
       render json: {
         success: 1,
         file: {
           url: url_for(blob),
-          signed_id: blob.signed_id # <-- ADDED
+          signed_id: blob.signed_id
         }
       }
     else
@@ -77,14 +77,14 @@ class ArticlesController < ApplicationController
   end
 
   def fetch_image_url
-    Rails.logger.info "---- DEBUG: RUNNING Fetch METHOD ----"
+    # Rails.logger.info "---- DEBUG: RUNNING Fetch METHOD ----"
 
     url = params[:url]
     if url
       io = URI.open(url)
       filename = File.basename(URI.parse(url).path)
       blob = ActiveStorage::Blob.create_and_upload!(io: io, filename: filename)
-      Rails.logger.info "---- DEBUG: BLOB SIGNED ID IS: #{blob.signed_id} ----"
+      # Rails.logger.info "---- DEBUG: BLOB SIGNED ID IS: #{blob.signed_id} ----"
       render json: {
         success: 1,
         file: {
@@ -100,11 +100,11 @@ class ArticlesController < ApplicationController
   end
 
   def upload_file
-    Rails.logger.info "---- DEBUG: RUNNING UPLOAD FILE METHOD ----"
+    # Rails.logger.info "---- DEBUG: RUNNING UPLOAD FILE METHOD ----"
     file = params[:file]
     if file
       blob = ActiveStorage::Blob.create_and_upload!(io: file, filename: file.original_filename)
-      Rails.logger.info "---- DEBUG: BLOB SIGNED ID IS: #{blob.signed_id} ----"
+      # Rails.logger.info "---- DEBUG: BLOB SIGNED ID IS: #{blob.signed_id} ----"
       render json: {
         success: 1,
         file: {
@@ -120,23 +120,27 @@ class ArticlesController < ApplicationController
       render json: { success: 0, message: 'No file provided' }, status: :unprocessable_entity
     end
   end
+  def toggle_clap
+    clap = current_user.claps.find_by(article_id: @article.id)
+    clap ? clap.destroy : current_user.claps.create!(article_id: @article.id)
+    @article.reload
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_article
       @article = Article.friendly.find(params.expect(:id))
-
-      #problem ::------- edit is not loading
       # If an old id or a numeric id was used to find the record, then
       # the request path will not match the post_path, and we should do
       # a 301 redirect that uses the current friendly id.
       if action_name == "show" && request.path != article_path(@article)
         redirect_to @article, status: :moved_permanently
       end
-
     end
 
-    # Only allow a list of trusted parameters through.
     def article_params
       params.expect(article: [ :title, :content,:topic_name ])
     end
