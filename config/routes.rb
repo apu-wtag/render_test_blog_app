@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       post :fetch_image_url
       post :upload_file
     end
+    resources :comments, only: [ :create, :edit, :update, :destroy ]
   end
 
   # dashboard

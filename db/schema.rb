@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_10_101443) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_11_061608) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -76,6 +76,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_10_101443) do
     t.index ["user_id"], name: "index_claps_on_user_id"
   end
 
+  create_table "comments", force: :cascade do |t|
+    t.text "body"
+    t.bigint "user_id", null: false
+    t.bigint "article_id", null: false
+    t.bigint "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["article_id"], name: "index_comments_on_article_id"
+    t.index ["parent_id"], name: "index_comments_on_parent_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string "slug", null: false
     t.integer "sluggable_id", null: false
@@ -121,4 +133,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_10_101443) do
   add_foreign_key "articles", "users"
   add_foreign_key "claps", "articles"
   add_foreign_key "claps", "users"
+  add_foreign_key "comments", "articles"
+  add_foreign_key "comments", "comments", column: "parent_id"
+  add_foreign_key "comments", "users"
 end

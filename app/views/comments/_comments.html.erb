@@ -1,0 +1,19 @@
+<%= turbo_frame_tag "comments_section" do %>
+  <div class="space-y-6">
+    <h2 class="text-xl font-bold text-gray-900 border-b pb-3">
+      Comments (<%= article.comments.count %>)
+    </h2>
+
+    <!-- New Comment Form -->
+    <div id="new_comment" class="border-b pb-6">
+      <%= render 'comments/form', article: article, comment: Comment.new %>
+    </div>
+
+    <!-- Comment List -->
+    <div id="comments" class="space-y-6">
+      <% article.comments.where(parent_id: nil).order(created_at: :desc).each do |comment| %>
+        <%= render 'comments/comment', comment: comment %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

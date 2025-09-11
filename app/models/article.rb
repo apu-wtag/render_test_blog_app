@@ -13,6 +13,7 @@ class Article < ApplicationRecord
   has_many :blobs, through: :article_blob_links, source: :blob
   has_many :claps, dependent: :destroy
   has_many :clapped_users, through: :claps, source: :user
+  has_many :comments, dependent: :destroy
   belongs_to :topic
   belongs_to :user
 

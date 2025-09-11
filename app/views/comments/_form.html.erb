@@ -1,0 +1,23 @@
+<%= form_with(model: [article, comment], class: "mt-2", data: { turbo: "true", action: "turbo:submit-end->comments#hide" }) do |form| %>
+  <%= form.hidden_field :parent_id %>
+
+  <div class="flex items-start space-x-3">
+    <!-- Avatar Placeholder -->
+    <div class="h-9 w-9 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">
+      <%= current_user.name.to_s.chr.upcase %>
+    </div>
+
+    <!-- Input -->
+    <div class="flex-1">
+      <%= form.text_area :body,
+                         rows: 2,
+                         class: "block w-full resize-none border-0 bg-gray-100 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white shadow-sm",
+                         placeholder: comment.persisted? ? "Edit your comment..." : "Write a response..." %>
+
+      <div class="flex justify-end mt-2">
+        <%= form.submit (comment.persisted? ? "Update" : "Respond"),
+                        class: "px-4 py-1.5 rounded-full bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 focus:outline-none shadow-sm cursor-pointer" %>
+      </div>
+    </div>
+  </div>
+<% end %>

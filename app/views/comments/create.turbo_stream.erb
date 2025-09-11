@@ -1,0 +1,8 @@
+<% if @comment.parent_id? %>
+  <%= turbo_stream.append dom_id(@comment.parent, :replies), partial: "comments/comment", locals: { comment: @comment } %>
+<% else %>
+  <%= turbo_stream.prepend "comments", partial: "comments/comment", locals: { comment: @comment } %>
+<% end %>
+<%= turbo_stream.replace "new_comment" do %>
+  <%= render "comments/form", article: @article, comment: Comment.new %>
+<% end %>
