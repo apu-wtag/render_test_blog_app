@@ -1,6 +1,6 @@
 <%= turbo_stream.replace dom_id(@comment) do %>
   <%= turbo_frame_tag dom_id(@comment) do %>
-    <div>Debug: Loading edit form for comment <%= @comment.id %></div>
+<!--    <div>Debug: Loading edit form for comment <%#= @comment.id %></div>-->
     <%= render "comments/form", article: @article, comment: @comment %>
   <% end %>
 <% end %>

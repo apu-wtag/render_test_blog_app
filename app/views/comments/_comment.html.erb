@@ -24,7 +24,7 @@
 
         <% if current_user == comment.user %>
           <%= link_to "Edit", edit_article_comment_path(comment.article, comment),
-                      data: { turbo: true },
+                      data: { turbo_stream: true },
                       class: "hover:text-gray-800" %>
           <%= button_to "Delete", [comment.article, comment],
                         method: :delete,
@@ -42,7 +42,7 @@
       </div>
 
       <!-- Hidden Reply Form -->
-      <div data-comments-target="replyForm" class="hidden mt-3 ml-12">
+      <div data-comments-target="replyForm" id = "new_reply" class="hidden mt-3 ml-12">
         <%= render 'comments/form',
                    article: comment.article,
                    comment: comment.replies.build %>
