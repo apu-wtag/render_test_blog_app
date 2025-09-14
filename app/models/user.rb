@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  extend FriendlyId
+  friendly_id :user_name, use: [ :slugged, :history ]
   attr_accessor :remember_token, :reset_token
   has_one_attached :profile_picture
   has_secure_password
@@ -58,6 +60,11 @@ class User < ApplicationRecord
   def regenerate_session_token
     update_attribute(:session_token, User.new_token)
   end
+
+  def should_generate_new_friendly_id?
+    user_name_changed? || super
+  end
+
 
   private
 
