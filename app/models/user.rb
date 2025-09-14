@@ -4,6 +4,7 @@ class User < ApplicationRecord
   attr_accessor :remember_token, :reset_token
   has_one_attached :profile_picture
   has_secure_password
+  enum :role, { member: 0, editor: 1, admin: 2 }
 
   validates :name, presence: true
   validates :user_name, presence: true, uniqueness: { case_sensitive: false },
