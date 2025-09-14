@@ -32,6 +32,9 @@ Rails.application.routes.draw do
     resources :comments, only: [ :create, :edit, :update, :destroy ]
   end
 
+  # topic resources
+  resources :topics, only: [ :show ]
+
   # dashboard
   root "articles#index"
 end
