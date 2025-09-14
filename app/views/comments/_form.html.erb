@@ -1,6 +1,6 @@
 <%= form_with(model: [article, comment], class: "mt-2", data: { turbo: "true", action: "turbo:submit-end->comments#hide" }) do |form| %>
   <%= form.hidden_field :parent_id %>
-
+  <% if current_user %>
   <div class="flex items-start space-x-3">
     <!-- Avatar Placeholder -->
     <div class="h-9 w-9 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">
@@ -20,4 +20,5 @@
       </div>
     </div>
   </div>
+  <% end %>
 <% end %>
