@@ -25,7 +25,8 @@ class UsersController < ApplicationController
   end
   def check_username
     username = params[:user_name].to_s.strip.downcase
-    available = username.present? && !User.where("LOWER(user_name) = ?", username).exists?
+    current_id = params[:current_id]
+    available = username.present? && !User.where("user_name = ?", username).where.not(id: current_id).exists?
     render json: { available: available }
   end
 

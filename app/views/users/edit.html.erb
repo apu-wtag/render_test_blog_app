@@ -11,10 +11,13 @@
     <% end %>
 
     <!-- Username -->
-    <div>
+    <div data-controller="username-check" data-current-id="<%= @user.id %>">
       <%= form.label :user_name, class: "block text-sm font-medium text-gray-700" %>
+      <span class="text-xs text-gray-500">(must be unique)</span>
       <%= form.text_field :user_name,
-                          class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+                          class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500",
+                          data: { action: "input->username-check#check" } %>
+      <div data-username-check-target="feedback" class="mt-1 text-sm"></div>
     </div>
 
     <!-- Name -->
