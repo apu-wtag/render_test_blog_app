@@ -67,3 +67,5 @@ end
 gem "sidekiq", "~> 8.0"
 gem "friendly_id", "~> 5.5"
 gem "whenever", "~> 1.0"
+
+gem "pundit", "~> 2.5"
