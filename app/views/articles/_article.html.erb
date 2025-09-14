@@ -4,26 +4,26 @@
     <%= article.title %>
   </h1>
   <!-- Author & Date -->
-  <%= link_to user_path(@article.user), class: "flex items-center space-x-3 mb-10 group hover:bg-gray-50 rounded-md p-1" do %>
-    <% if @article.user.profile_picture.attached? %>
-      <%= image_tag @article.user.profile_picture, class: "h-10 w-10 rounded-full object-cover" %>
+  <%= link_to user_path(article.user), class: "flex items-center space-x-3 mb-10 group hover:bg-gray-50 rounded-md p-1" do %>
+    <% if article.user.profile_picture.attached? %>
+      <%= image_tag article.user.profile_picture, class: "h-10 w-10 rounded-full object-cover" %>
     <% end %>
 
     <div>
       <p class="text-sm font-semibold text-gray-800 group-hover:underline">
-        <%= @article.user.name %>
+        <%= article.user.name %>
       </p>
       <p class="text-xs text-gray-500">
-        <%= @article.created_at.strftime("%B %d, %Y") %>
+        <%= article.created_at.strftime("%B %d, %Y") %>
       </p>
     </div>
   <% end %>
   <!--Topic-->
   <div class="flex items-center space-x-2">
     <span class="text-base font-medium text-gray-800">Topic name :</span>
-    <span class="inline-block bg-gray-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
-      #<%= article.topic.name %>
-    </span>
+    <%= link_to "##{article.topic.slug}",
+                topic_path(article.topic),
+                class: "inline-block bg-gray-100 hover:bg-gray-200 transition-colors rounded-full px-3 py-1 text-sm font-semibold text-gray-700" %>
   </div>
   <div>
   <%= render "articles/clap_button", article: article %>
