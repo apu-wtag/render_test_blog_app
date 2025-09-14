@@ -1,8 +1,38 @@
 <% if @comment.parent_id? %>
   <%= turbo_stream.append dom_id(@comment.parent, :replies), partial: "comments/comment", locals: { comment: @comment } %>
+  <%#= turbo_stream.update "reply-count-#{@comment.parent_id}" do %>
+    <%# if @comment.parent.replies.any? %>
+<!--      View <%#= pluralize(@comment.parent.replies.count, 'reply') %>-->
+    <%# else %>
+<!--      <span class="hidden"></span>-->
+    <%# end %>
+  <%# end %>
+  <%= turbo_stream.replace "reply-count-#{@comment.parent_id}" do %>
+    <% if @comment.parent.replies.any? %>
+      <button id="reply-count-<%= @comment.parent.id %>"
+              data-action="click->comments#toggleReplies"
+              class="font-medium text-indigo-600 hover:underline">
+        View <%= pluralize(@comment.parent.replies.count, 'reply') %>
+      </button>
+    <% else %>
+      <span id="reply-count-<%= @comment.parent.id %>" class="hidden"></span>
+    <% end %>
+  <% end %>
+  <%= turbo_stream.replace dom_id(@comment.parent, :reply_form) do %>
+    <div id="<%= dom_id(@comment.parent, :reply_form) %>"
+         data-comments-target="replyForm"
+         class="hidden mt-3 ml-12">
+      <%= render "comments/form",
+                 article: @article,
+                 comment: @comment.parent.replies.build %>
+    </div>
+  <% end %>
 <% else %>
   <%= turbo_stream.prepend "comments", partial: "comments/comment", locals: { comment: @comment } %>
   <%= turbo_stream.replace "new_comment" do %>
     <%= render "comments/form", article: @article, comment: Comment.new %>
   <% end %>
+<% end %>
+<%= turbo_stream.update "comment-count-#{@article.id}" do %>
+  Comments (<%= @article.comments.count %>)
 <% end %>

@@ -32,17 +32,17 @@
                         class: "text-red-500 hover:text-red-700" %>
         <% end %>
 
-        <% if comment.replies.any? %>
-          <button
-            data-action="click->comments#toggleReplies"
-            class="font-medium text-indigo-600 hover:underline">
-            View <%= pluralize(comment.replies.count, "reply") %>
-          </button>
-        <% end %>
+        <button id="reply-count-<%= comment.id %>"
+                data-action="click->comments#toggleReplies"
+                class="font-medium text-indigo-600 hover:underline <%= 'hidden' if comment.replies.empty? %>">
+          <%= comment.replies.count == 1 ? "View 1 reply" : "View #{comment.replies.count} replies" %>
+        </button>
       </div>
 
       <!-- Hidden Reply Form -->
-      <div data-comments-target="replyForm" id = "new_reply" class="hidden mt-3 ml-12">
+      <div id="<%= dom_id(comment, :reply_form) %>"
+           data-comments-target="replyForm"
+           class="hidden mt-3 ml-12">
         <%= render 'comments/form',
                    article: comment.article,
                    comment: comment.replies.build %>
