@@ -11,6 +11,9 @@ class ArticlePolicy < ApplicationPolicy
   def destroy?
     update?
   end
+  def toggle_clap?
+    user.present?
+  end
   class Scope < Scope
     def resolve
       scope.all

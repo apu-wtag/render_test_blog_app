@@ -5,9 +5,22 @@
     </h2>
 
     <!-- New Comment Form -->
-    <div id="new_comment" class="border-b pb-6">
-      <%= render 'comments/form', article: article, comment: Comment.new %>
-    </div>
+    <% if policy(Comment.new).create? %>
+      <div id="new_comment" class="border-b pb-6">
+        <%= render 'comments/form', article: article, comment: Comment.new %>
+      </div>
+    <% else %>
+      <div class="border-b pb-6">
+        <div class="bg-gray-50 text-center p-4 rounded-lg">
+          <p class="text-gray-700">
+            Please <%= link_to "Log in", login_path, class: "font-semibold text-indigo-600 hover:underline", data: { turbo_frame: "_top" }  %>
+            or <%= link_to "Sign up", sign_up_path, class: "font-semibold text-indigo-600 hover:underline", data: { turbo_frame: "_top" }  %>
+            to leave a comment.
+          </p>
+        </div>
+      </div>
+
+  <% end %>
 
     <!-- Comment List -->
     <div id="comments" class="space-y-6">

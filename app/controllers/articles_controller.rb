@@ -1,29 +1,33 @@
 class ArticlesController < ApplicationController
   before_action :require_login, only: %i[ new create edit update destroy ]
   before_action :set_article, only: %i[ show edit update destroy toggle_clap ]
+  before_action :authorize_upload, only: %i[ upload_image fetch_image_url upload_file ]
 
   # GET /articles or /articles.json
   def index
-    @articles = Article.all
+    @articles = policy_scope(Article)
   end
 
   # GET /articles/1 or /articles/1.json
   def show
+    authorize @article
   end
 
   # GET /articles/new
   def new
     @article = Article.new
+    authorize @article
   end
 
   # GET /articles/1/edit
   def edit
+    authorize @article
   end
 
   # POST /articles or /articles.json
   def create
     @article = current_user.articles.build(article_params)
-
+    authorize @article
     respond_to do |format|
       if @article.save
         format.html { redirect_to @article, notice: "Article was successfully created." }
@@ -37,6 +41,7 @@ class ArticlesController < ApplicationController
 
   # PATCH/PUT /articles/1 or /articles/1.json
   def update
+    authorize @article
     respond_to do |format|
       if @article.update(article_params)
         format.html { redirect_to @article, notice: "Article was successfully updated.", status: :see_other }
@@ -50,6 +55,7 @@ class ArticlesController < ApplicationController
 
   # DELETE /articles/1 or /articles/1.json
   def destroy
+    authorize @article
     @article.destroy!
 
     respond_to do |format|
@@ -140,7 +146,14 @@ class ArticlesController < ApplicationController
         redirect_to @article, status: :moved_permanently
       end
     end
-
+    def authorize_upload
+      if params[:article_id].present?
+        article = Article.friendly.find(params[:article_id])
+        authorize article, :update?
+      else
+        authorize Article, :create?
+      end
+    end
     def article_params
       params.expect(article: [ :title, :content,:topic_name ])
     end

@@ -19,11 +19,19 @@ import InlineCode from "@editorjs/inline-code";
 // Connects to data-controller="editor"
 export default class extends Controller {
   static targets = ["article_content"];
+  static  values = { articleID: String };
 
   csrfToken() {
     const metaTag = document.querySelector("meta[name='csrf-token']");
     console.log(metaTag);
     return metaTag ? metaTag.content : "";
+  }
+  uploadUrl(path) {
+    if (this.hasArticleIdValue) {
+      return `${path}?article_id=${this.articleIdValue}`;
+    } else {
+      return path;
+    }
   }
   connect() {
     console.log("Hello, Stimulus!", this.element);
@@ -61,7 +69,7 @@ export default class extends Controller {
               uploadByFile: (file) => {
                 let formData = new FormData();
                 formData.append('file', file);
-                return fetch('/articles/upload_image', {
+                return fetch(this.uploadUrl('/articles/upload_image'), {
                   method: 'POST',
                   body: formData,
                   headers: {
@@ -82,7 +90,7 @@ export default class extends Controller {
                 });
               },
               uploadByUrl: (url) => {
-                return fetch('/articles/fetch_image_url', {
+                return fetch(this.uploadUrl('/articles/fetch_image_url'), {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -113,7 +121,7 @@ export default class extends Controller {
               uploadByFile: (file) => {
                 let formData = new FormData();
                 formData.append('file', file);
-                return fetch('/articles/upload_file', {
+                return fetch(this.uploadUrl('/articles/upload_file'), {
                   method: 'POST',
                   body: formData,
                   headers: {

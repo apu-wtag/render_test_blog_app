@@ -17,8 +17,10 @@
 
     <div class="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
       <%= link_to "Show", article, class: "rounded-md px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 font-medium" %>
-      <% if current_user.present? && current_user == article.user %>
+      <% if policy(article).update? %>
         <%= link_to "Edit", edit_article_path(article), class: "rounded-md px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 font-medium" %>
+      <% end %>
+      <% if policy(article).destroy?  %>
         <%= button_to "Destroy", article, method: :delete,
                       class: "rounded-md px-3 py-1.5 text-xs text-white bg-red-600 hover:bg-red-500 font-medium",
                       data: { turbo_confirm: "Are you sure?" } %>

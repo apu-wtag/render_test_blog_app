@@ -1,5 +1,5 @@
 <div id="<%= dom_id(article, :clap_button) %>">
-  <% if current_user %>
+  <% if policy(article).toggle_clap? %>
     <%
       clapped = current_user.clapped_articles.include?(article)
       state_classes = clapped ? "text-blue-600" : "text-gray-600"

@@ -5,6 +5,9 @@ class CommentPolicy < ApplicationPolicy
   def update?
     user.present? && (user.admin? || user.editor? || record.user == user)
   end
+  def edit?
+    update?
+  end
   def destroy?
     update?
   end

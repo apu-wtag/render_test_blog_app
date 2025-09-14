@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
   helper_method :current_user
   include Pundit::Authorization
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   private
   def current_user
@@ -78,5 +79,9 @@ class ApplicationController < ActionController::Base
     user.forget
     cookies.delete(:user_id)
     cookies.delete(:remember_token)
+  end
+  def user_not_authorized
+    flash[:alert] = "You are not authorized to perform this action."
+    redirect_back(fallback_location: root_path)
   end
 end

@@ -6,6 +6,7 @@ class CommentsController < ApplicationController
   def create
     @comment = @article.comments.build(comment_params)
     @comment.user = current_user
+    authorize @comment
     if @comment.save
       respond_to do |format|
         format.turbo_stream
@@ -15,12 +16,14 @@ class CommentsController < ApplicationController
       end
   end
   def edit
+    authorize @comment
     respond_to do |format|
       format.turbo_stream
       format.html { redirect_to article_path(@article, anchor: view_context.dom_id(@comment)) }
     end
   end
   def update
+    authorize @comment
     if @comment.update(comment_params)
       respond_to do |format|
         format.turbo_stream
@@ -30,6 +33,7 @@ class CommentsController < ApplicationController
     end
   end
   def destroy
+    authorize @comment
     @comment.destroy
     respond_to do |format|
       format.turbo_stream
