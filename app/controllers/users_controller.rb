@@ -5,8 +5,10 @@ class UsersController < ApplicationController
     @user = User.new
   end
   def show
+    authorize @user
   end
   def edit
+    authorize @user
   end
   def create
     @user = User.new(user_params)
@@ -17,6 +19,7 @@ class UsersController < ApplicationController
     end
   end
   def update
+    authorize @user
     if @user.update(user_params)
       redirect_to user_path(@user), notice: "Your account has been updated successfully!"
     else
