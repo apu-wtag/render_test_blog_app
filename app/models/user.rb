@@ -21,6 +21,7 @@ class User < ApplicationRecord
   has_many :claps, dependent: :destroy
   has_many :clapped_articles, through: :claps, source: :article
   has_many :comments, dependent: :destroy
+  has_many :reports, dependent: :destroy
   def self.new_token
     SecureRandom.urlsafe_base64(32)
   end
