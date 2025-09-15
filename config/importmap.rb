@@ -19,3 +19,5 @@ pin "@editorjs/quote", to: "@editorjs--quote.js" # @2.7.6
 pin "@editorjs/table", to: "@editorjs--table.js" # @2.4.5
 pin "@editorjs/marker", to: "@editorjs--marker.js" # @1.4.0
 pin "@editorjs/inline-code", to: "@editorjs--inline-code.js" # @1.5.2
+pin "chartkick", to: "chartkick.js" # @5.0.1
+pin "highcharts" # @12.4.0

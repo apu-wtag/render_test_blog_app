@@ -1,5 +1,6 @@
 require 'sidekiq/web'
 Rails.application.routes.draw do
+  get "reports/new"
   get "up" => "rails/health#show", as: :rails_health_check
   # sidekiq
   mount Sidekiq::Web => '/sidekiq'
@@ -30,11 +31,36 @@ Rails.application.routes.draw do
       post :upload_file
     end
     resources :comments, only: [ :create, :edit, :update, :destroy ]
+    resources :reports, only: [:new, :create], shallow: true
   end
 
   # topic resources
   resources :topics, only: [ :show ]
 
+  # Admin resources
+  namespace :admin do
+    get "dashboard/index"
+    root "dashboard#index"
+    resources :users, only: [ :index, :destroy ] do
+      member do
+        patch :update_role
+      end
+    end
+    resources :articles, only: [ :index, :destroy ] do
+      member do
+        patch :resolve_reports
+        patch :dismiss_reports
+      end
+    end
+    # Comments resources
+    resources :comments, only: [ :index, :destroy] do
+      member do
+        patch :resolve_reports
+        patch :dismiss_reports
+      end
+      resources :reports, only: [:new, :create], shallow: true
+    end
+  end
   # dashboard
   root "articles#index"
 end

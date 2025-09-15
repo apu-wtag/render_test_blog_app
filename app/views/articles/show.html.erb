@@ -17,6 +17,10 @@
                     class: "text-sm font-medium text-red-600 hover:text-red-800 transition-colors",
                     data: { turbo_confirm: "Are you sure?" } %>
     <% end %>
+    <% if @article.user != current_user %>
+      <%= link_to "Report this article", new_article_report_path(@article),
+                  class: "text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors" %>
+    <% end %>
   </div>
 <!--  Rendering Article-->
   <%= render @article %>

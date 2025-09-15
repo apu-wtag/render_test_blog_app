@@ -1,0 +1,24 @@
+<nav class="bg-gray-50 shadow-sm">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <span class="font-bold text-lg text-indigo-600">Admin Panel</span>
+        </div>
+        <div class="hidden md:block">
+          <div class="ml-10 flex items-baseline space-x-4">
+            <%= link_to "Dashboard", admin_root_path, class: "text-gray-700 hover:text-indigo-600 rounded-md px-3 py-2 text-sm font-medium" %>
+            <%= link_to "User Management", admin_users_path, class: "text-gray-700 hover:text-indigo-600 rounded-md px-3 py-2 text-sm font-medium" %>
+            <%= link_to "Article Moderation", admin_articles_path, class: "text-gray-700 hover:text-indigo-600 rounded-md px-3 py-2 text-sm font-medium" %>
+            <%= link_to "Comment Moderation", admin_comments_path, class: "text-gray-700 hover:text-indigo-600 rounded-md px-3 py-2 text-sm font-medium" %>
+          </div>
+        </div>
+      </div>
+      <div class="hidden md:block">
+        <div class="ml-4 flex items-center md:ml-6">
+          <%= link_to "View Public Site", root_path, target: "_blank", class: "text-gray-700 hover:text-indigo-600 text-sm font-medium" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

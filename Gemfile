@@ -69,3 +69,11 @@ gem "friendly_id", "~> 5.5"
 gem "whenever", "~> 1.0"
 
 gem "pundit", "~> 2.5"
+
+
+
+gem "groupdate", "~> 6.7"
+
+gem "chartkick", "~> 5.2"
+
+gem "highcharts", "~> 0.0.3"

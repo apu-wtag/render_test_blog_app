@@ -86,6 +86,7 @@ GEM
     brakeman (7.1.0)
       racc
     builder (3.3.0)
+    chartkick (5.2.0)
     childprocess (5.1.0)
       logger (~> 1.5)
     chronic (0.10.2)
@@ -118,8 +119,13 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    groupdate (6.7.0)
+      activesupport (>= 7.1)
+    highcharts (0.0.3)
+      ice_cube (= 0.7.7)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
+    ice_cube (0.7.7)
     importmap-rails (2.2.2)
       actionpack (>= 6.0.0)
       activesupport (>= 6.0.0)
@@ -404,10 +410,13 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   bootsnap
   brakeman
+  chartkick (~> 5.2)
   debug
   factory_bot_rails
   faker
   friendly_id (~> 5.5)
+  groupdate (~> 6.7)
+  highcharts (~> 0.0.3)
   importmap-rails
   jbuilder
   kamal

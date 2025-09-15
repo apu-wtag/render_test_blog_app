@@ -2,3 +2,6 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 import "flash"
+import "chartkick"
+import Highcharts from "highcharts"
+window.Highcharts = Highcharts
