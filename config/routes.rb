@@ -40,21 +40,21 @@ Rails.application.routes.draw do
 
   # Admin resources
   namespace :admin do
-    get "dashboard/index"
     root "dashboard#index"
+    resource :moderation, only: [:show]
     resources :users, only: [ :index, :destroy ] do
       member do
         patch :update_role
       end
     end
-    resources :articles, only: [ :index, :destroy ] do
+    resources :articles, only: [ :destroy ] do
       member do
         patch :resolve_reports
         patch :dismiss_reports
       end
     end
     # Comments resources
-    resources :comments, only: [ :index, :destroy] do
+    resources :comments, only: [ :destroy] do
       member do
         patch :resolve_reports
         patch :dismiss_reports
