@@ -2,11 +2,13 @@
   <%= form.hidden_field :parent_id %>
   <div class="flex items-start space-x-3">
     <!-- Avatar Placeholder -->
-    <div class="h-9 w-9 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">
-      <% if current_user %>
+    <% if current_user.profile_picture.attached? %>
+      <%= image_tag current_user.profile_picture, class: "h-10 w-10 rounded-full object-cover" %>
+    <% else %>
+      <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center font-bold text-gray-700">
         <%= current_user.name.to_s.chr.upcase %>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
 
     <!-- Input -->
     <div class="flex-1">
