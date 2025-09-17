@@ -1,4 +1,5 @@
 module ApplicationHelper
+  include Pagy::Frontend
   def flash_class_for(type)
     base_classes = "px-4 py-2 rounded-lg shadow-md"
     case type.to_sym

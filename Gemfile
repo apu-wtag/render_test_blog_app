@@ -77,3 +77,5 @@ gem "groupdate", "~> 6.7"
 gem "chartkick", "~> 5.2"
 
 gem "highcharts", "~> 0.0.3"
+
+gem "pagy", "~> 9.4"

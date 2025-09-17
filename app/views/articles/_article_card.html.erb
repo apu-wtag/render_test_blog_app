@@ -1,4 +1,4 @@
-<%# This partial displays a single article as a summary card. %>
+<!-- This partial displays a single article as a summary card.-->
 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm group transition hover:shadow-md">
 
   <div class="flex justify-between items-center mb-4">
@@ -16,9 +16,9 @@
     </div>
 
     <div class="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-      <%= link_to "Show", article, class: "rounded-md px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 font-medium" %>
+      <%= link_to "Show", article, class: "rounded-md px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 font-medium", data: { turbo_frame: "_top" } %>
       <% if policy(article).update? %>
-        <%= link_to "Edit", edit_article_path(article), class: "rounded-md px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 font-medium" %>
+        <%= link_to "Edit", edit_article_path(article), class: "rounded-md px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 font-medium", data: { turbo_frame: "_top" } %>
       <% end %>
       <% if policy(article).destroy?  %>
         <%= button_to "Destroy", article, method: :delete,
@@ -28,14 +28,13 @@
     </div>
   </div>
 
-  <%= link_to "##{article.topic.slug}", topic_path(article.topic), class: "inline-block mb-2 px-2 py-0.5 text-xs font-medium rounded-full bg-blue-50 text-blue-600" %>
+  <%= link_to "##{article.topic.slug}", topic_path(article.topic), class: "inline-block mb-2 px-2 py-0.5 text-xs font-medium rounded-full bg-blue-50 text-blue-600", data: { turbo_frame: "_top" } %>
 
-  <%= link_to article_path(article), class: "block" do %>
+  <%= link_to article_path(article), class: "block", data: { turbo_frame: "_top" } do %>
     <h2 class="text-xl font-bold tracking-tight text-gray-900 group-hover:text-gray-700">
       <%= article.title %>
     </h2>
   <% end %>
-
   <p class="mt-2 text-sm text-gray-600">
     <%= extract_summary_from_editorjs(article.content, length: 200) %>
   </p>

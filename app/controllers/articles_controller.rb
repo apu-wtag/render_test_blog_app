@@ -5,8 +5,31 @@ class ArticlesController < ApplicationController
 
   # GET /articles or /articles.json
   def index
-    @articles = policy_scope(Article)
+    @query = params[:query]
+    @scope = params[:scope] || 'articles'
+
+    if @scope == 'articles'
+      articles = policy_scope(Article)
+      articles = articles.includes(user: { profile_picture_attachment: :blob })
+      if @query.present?
+        search_query = "%#{@query}%"
+        articles = articles.joins(:user).where(
+          "articles.title ILIKE ? OR articles.content::text ILIKE ? OR users.name ILIKE ?",
+          search_query, search_query, search_query
+        )
+      end
+      @pagy, @results = pagy(articles.order(created_at: :desc), items: 10)
+    elsif @scope == 'people'
+      users = policy_scope(User) rescue User.all
+      users = users.includes(profile_picture_attachment: :blob)
+      if @query.present?
+        search_query = "%#{@query}%"
+        users = users.where("name ILIKE ? OR user_name ILIKE ?", search_query, search_query)
+      end
+      @pagy, @results = pagy(users.order(:name), items: 10)
+    end
   end
+
 
   # GET /articles/1 or /articles/1.json
   def show

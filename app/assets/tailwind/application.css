@@ -35,11 +35,37 @@
     @apply font-mono text-sm bg-transparent p-0;
 }
 article.prose pre code {
-    color: inherit; /* Prevent prose-code:text-pink-600 from overriding Prism.js colors */
-    background: none; /* Remove any prose background if needed */
+    color: inherit;
+    background: none;
 }
 
 /* Lists */
 .prose ul { @apply list-disc list-inside; }
 .prose ol { @apply list-decimal list-inside; }
 
+.pagy {
+    @apply flex items-center space-x-1 text-sm font-medium;
+}
+
+.pagy a:not(.gap) {
+    @apply inline-flex items-center rounded-md px-3 py-1.5 text-gray-700 bg-white ring-1 ring-inset ring-gray-300;
+}
+
+.pagy a:not(.gap):hover {
+    @apply bg-indigo-50;
+}
+
+.pagy a.current {
+    @apply z-10 text-white bg-indigo-600 ring-1 ring-inset ring-indigo-600;
+}
+
+.pagy a:not([href]) {
+    @apply text-gray-400 bg-gray-50 cursor-not-allowed;
+}
+
+.pagy label {
+    @apply inline-block whitespace-nowrap bg-gray-200 rounded-lg px-3 py-0.5;
+}
+.pagy label input {
+    @apply bg-gray-100 border-none rounded-md;
+}

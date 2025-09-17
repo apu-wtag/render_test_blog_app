@@ -1,21 +1,74 @@
-<% content_for :title, "Articles" %>
+<% content_for :title, "Explore Articles & People" %>
 
 <div class="w-full">
+  <%= turbo_frame_tag "search-results" do %>
 
-  <!-- Header -->
-  <% if policy(Article).create? %>
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="font-bold text-4xl">Articles</h1>
-      <%= link_to "New article", new_article_path,
-                  class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+      <div>
+        <h1 class="font-bold text-4xl">Explore</h1>
+        <p class="text-gray-500 mt-1">Discover articles and authors.</p>
+      </div>
+
+      <div class="flex items-center gap-4 w-full sm:w-auto">
+        <div class="relative w-full sm:w-72" data-controller="autosubmit">
+          <%= form_with url: articles_path, method: :get, class: "w-full" do |form| %>
+            <%= text_field_tag :query, @query,
+                               placeholder: "Search articles and people...",
+                               class: "w-full rounded-md border-gray-300 py-2 pl-4 pr-10 shadow-sm focus:border-indigo-500 focus:ring-indigo-500",
+                               data: { autosubmit_target: "query" } %>
+            <%= hidden_field_tag :scope, @scope %>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+              <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" /></svg>
+            </div>
+          <% end %>
+        </div>
+        <% if policy(Article).create? %>
+          <%= link_to "New article", new_article_path,
+                      class: "hidden sm:block rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium whitespace-nowrap", data: { turbo_frame: "_top" } %>
+        <% end %>
+      </div>
     </div>
-  <% end %>
-  <!-- Articles List -->
-  <div id="articles" class="min-w-full space-y-10">
-    <% if @articles.any? %>
-      <%= render partial: 'articles/article_card', collection: @articles, as: :article %>
-    <% else %>
-      <p class="text-center my-10">No articles found.</p>
-    <% end %>
-  </div>
+
+    <div class="border-b border-gray-200 mb-8">
+      <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+        <%= link_to "Articles", articles_path(query: @query, scope: 'articles'), class: "whitespace-nowrap border-b-2 py-3 px-1 text-sm font-medium #{'border-indigo-500 text-indigo-600' if @scope == 'articles'} #{'border-transparent text-gray-500 hover:border-gray-300' unless @scope == 'articles'}" %>
+        <%= link_to "People", articles_path(query: @query, scope: 'people'), class: "whitespace-nowrap border-b-2 py-3 px-1 text-sm font-medium #{'border-indigo-500 text-indigo-600' if @scope == 'people'} #{'border-transparent text-gray-500 hover:border-gray-300' unless @scope == 'people'}" %>
+      </nav>
+    </div>
+
+    <div id="results" class="min-w-full">
+      <% if @results.any? %>
+        <% if @scope == 'articles' %>
+          <div class="space-y-10">
+            <%= render partial: 'articles/article_card', collection: @results, as: :article %>
+          </div>
+        <% elsif @scope == 'people' %>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <%= render partial: 'articles/user_card', collection: @results, as: :user %>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="text-center my-10 text-gray-500">No results found for "<%= @query %>".</p>
+      <% end %>
+    </div>
+
+    <div class="mt-8">
+      <% if @pagy.present? && @pagy.pages > 1 %>
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+
+          <div class="text-sm text-gray-700">
+            <%== pagy_info(@pagy) %>
+          </div>
+
+          <div>
+            <%# Make sure to use the pagy_tailwind_nav helper for Tailwind styles %>
+            <%== pagy_nav(@pagy) %>
+          </div>
+
+        </div>
+      <% end %>
+    </div>
+
+
+<% end %>
 </div>
