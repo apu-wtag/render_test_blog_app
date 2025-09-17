@@ -48,6 +48,9 @@
               <%= image_tag current_user.profile_picture, class: "h-8 w-8 rounded-full" %>
             <% end %>
             <span class="text-gray-700">Hello, <%= link_to "#{current_user.name}", user_path(current_user) %></span>
+            <% if current_user.admin? %>
+              <%= link_to "Admin Dashborard", admin_root_path,class: "text-red-700 hover:text-indigo-600" %>
+            <% end %>
             <%= button_to "Logout", logout_path, method: :delete, class: "text-gray-700 hover:text-indigo-600" %>
           <% else %>
             <%= link_to "Sign Up", sign_up_path, class: "text-gray-700 hover:text-indigo-600" %>

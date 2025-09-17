@@ -11,8 +11,7 @@ class ReportsController < ApplicationController
     @report.user = current_user
 
     if @report.save
-      render turbo_stream: turbo_stream.replace("report_form_#{@reportable.class.name}_#{@reportable.id}",
-                                                partial: "reports/success")
+      redirect_to reportable_redirect_path, notice: "Thank you! Your report has been submitted for review."
     else
       render :new, status: :unprocessable_entity
     end
@@ -20,10 +19,17 @@ class ReportsController < ApplicationController
 
   private
   def set_reportable
-    if params[:article_id]
-      @reportable = Article.friendly.find(params[:article_id])
-    elsif params[:comment_id]
+    if params[:comment_id]
       @reportable = Comment.find(params[:comment_id])
+    elsif params[:article_id]
+      @reportable = Article.friendly.find(params[:article_id])
+    end
+  end
+  def reportable_redirect_path
+    if @reportable.is_a?(Article)
+      article_path(@reportable)
+    else # It's a Comment
+      article_path(@reportable.article)
     end
   end
 

@@ -1,6 +1,6 @@
 <%= turbo_frame_tag "report_form_#{@reportable.class.name}_#{@reportable.id}" do %>
-  <%= form_with(model: [@reportable, @report], class: "mt-2 p-4 border rounded-md bg-gray-50") do |form| %>
-    <h3 class="font-bold text-md mb-2">Report Content</h3>
+  <% model_path = @reportable.is_a?(Article) ? [@reportable, @report] : [@reportable.article, @reportable, @report] %>
+  <%= form_with(model: model_path, class: "mt-2 p-4 border rounded-md bg-gray-50", data: { turbo_frame: "_top" }) do |form| %>
     <% if form.object.errors.any? %>
       <div class="text-red-600 text-sm mb-2">
         <%= form.object.errors.full_messages.to_sentence %>

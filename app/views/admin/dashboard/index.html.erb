@@ -42,8 +42,11 @@
                 <div class="flex items-center space-x-4">
                   <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-gray-900 truncate">
-                      <%= report.reportable.is_a?(Article) ? "Article:" : "Comment on:" %>
-                      <%= link_to report.reportable.is_a?(Article) ? report.reportable.title : report.reportable.article.title, report.reportable.article, class: "text-blue-600 hover:underline" %>
+                      <% if report.reportable.is_a?(Article) %>
+                        Article: <%= link_to report.reportable.title, article_path(report.reportable), class: "text-blue-600 hover:underline" %>
+                      <% else %>
+                        Comment on: <%= link_to report.reportable.article.title, article_path(report.reportable.article), class: "text-blue-600 hover:underline" %>
+                      <% end %>
                     </p>
                     <p class="text-sm text-gray-500 truncate italic">"<%= report.reason %>"</p>
                     <p class="text-xs text-gray-400">Reported by <%= report.user.name %> <%= time_ago_in_words(report.created_at) %> ago</p>

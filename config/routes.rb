@@ -1,6 +1,5 @@
 require 'sidekiq/web'
 Rails.application.routes.draw do
-  get "reports/new"
   get "up" => "rails/health#show", as: :rails_health_check
   # sidekiq
   mount Sidekiq::Web => '/sidekiq'
@@ -30,7 +29,9 @@ Rails.application.routes.draw do
       post :fetch_image_url
       post :upload_file
     end
-    resources :comments, only: [ :create, :edit, :update, :destroy ]
+    resources :comments, only: [ :create, :edit, :update, :destroy ] do
+      resources :reports, only: [:new, :create], shallow: true
+    end
     resources :reports, only: [:new, :create], shallow: true
   end
 
