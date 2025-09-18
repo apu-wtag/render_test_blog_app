@@ -46,8 +46,8 @@
 
         <button id="reply-count-<%= comment.id %>"
                 data-action="click->comments#toggleReplies"
-                class="font-medium text-indigo-600 hover:underline <%= 'hidden' if comment.replies.empty? %>">
-          <%= comment.replies.count == 1 ? "View 1 reply" : "View #{comment.replies.count} replies" %>
+                class="font-medium text-indigo-600 hover:underline <%= 'hidden' if comment.replies.kept.empty? %>">
+          <%= comment.replies.kept.count == 1 ? "View 1 reply" : "View #{comment.replies.kept.count} replies" %>
         </button>
       </div>
 
@@ -64,10 +64,10 @@
       <div id="<%= dom_id(comment, :replies) %>"
            data-comments-target="replies"
            class="hidden ml-12 mt-3 space-y-3 border-l pl-4">
-        <% comment.replies.order(created_at: :asc).each do |reply| %>
+        <% comment.replies.kept.order(created_at: :asc).each do |reply| %>
           <%= render 'comments/comment', comment: reply %>
         <% end %>
       </div>
     </div>
-  <% end %>
+<% end %>
 </div>

@@ -3,13 +3,13 @@ class Admin::ModerationsController < Admin::BaseController
     @scope = params[:scope] || "articles"
 
     if @scope == "articles"
-      @results = Article.joins(:reports)
+      @results = Article.kept.joins(:reports)
                         .where(reports: { status: :pending })
                         .distinct
                         .includes(:user, reports: [:user])
                         .order(created_at: :desc)
     elsif @scope == "comments"
-      @results = Comment.joins(:reports)
+      @results = Comment.kept.joins(:reports)
                         .where(reports: { status: :pending })
                         .distinct
                         .includes(:user, :article, reports: [:user])

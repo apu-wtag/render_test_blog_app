@@ -2,7 +2,7 @@ class Admin::ArticlesController < Admin::BaseController
   before_action :set_article, only: [:destroy, :resolve_reports, :dismiss_reports]
   def destroy
     @article.reports.pending.update_all(status: :resolved)
-    @article.destroy
+    @article.discard
     redirect_to admin_moderation_path, notice: "Article was deleted and reports were resolved."
   end
   def resolve_reports
@@ -16,6 +16,6 @@ class Admin::ArticlesController < Admin::BaseController
 
   private
   def set_article
-    @article = Article.friendly.find(params[:id])
+    @article = Article.kept.friendly.find(params[:id])
   end
 end

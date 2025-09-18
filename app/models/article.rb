@@ -1,4 +1,5 @@
 class Article < ApplicationRecord
+  include Discard::Model
   extend FriendlyId
   friendly_id :title, use: [:slugged, :history]
   attr_writer :topic_name

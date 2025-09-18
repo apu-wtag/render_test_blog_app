@@ -78,11 +78,18 @@
                   </td>
 
                   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <%= link_to "Show", user_path(user), class: "text-indigo-600 hover:text-indigo-900", data: { turbo_frame: "_top" } %>
-                    <% unless user == current_user %>
-                      <span class="mx-2 text-gray-300">|</span>
-                      <%= link_to "Delete", admin_user_path(user), data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete #{user.name}?" }, class: "text-red-600 hover:text-red-900" %>
+                    <% if user.discarded? %>
+                      <%= button_to "Restore", restore_admin_user_path(user), method: :patch,
+                                    class: "text-green-600 hover:text-green-900",
+                                    data: { turbo_confirm: "Are you sure you want to restore #{user.name}?" } %>
+                    <% else %>
+                      <%= link_to "Show", user_path(user), class: "text-indigo-600 hover:text-indigo-900", data: { turbo_frame: "_top" } %>
+                      <% unless user == current_user %>
+                        <span class="mx-2 text-gray-300">|</span>
+                        <%= link_to "Delete", admin_user_path(user), data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete #{user.name}?" }, class: "text-red-600 hover:text-red-900" %>
+                      <% end %>
                     <% end %>
+
                   </td>
                 </tr>
               <% end %>

@@ -34,7 +34,7 @@ class CommentsController < ApplicationController
   end
   def destroy
     authorize @comment
-    @comment.destroy
+    @comment.discard
     respond_to do |format|
       format.turbo_stream
     end
@@ -42,13 +42,13 @@ class CommentsController < ApplicationController
   private
   def set_article
     # binding.irb
-    @article = Article.friendly.find(params[:article_id])
+    @article = Article.kept.friendly.find(params[:article_id])
     # if action_name == "show" && request.path != article_path(@article)
     #   redirect_to @article, status: :moved_permanently
     # end
   end
   def set_comment
-    @comment = Comment.find_by(id: params[:id])
+    @comment = Comment.kept.find_by(id: params[:id])
     redirect_to @article, alert: "Comment not found" unless @comment
   end
   def comment_params

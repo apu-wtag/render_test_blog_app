@@ -34,19 +34,40 @@
       Articles
     </h2>
 
-    <% if @user.articles.any? %>
-      <div class="space-y-8">
-        <% @user.articles.each do |article| %>
-          <div>
-            <h3 class="text-xl font-semibold">
-              <%= link_to article.title, article_path(article), class: "hover:underline" %>
-            </h3>
-            <p class="text-gray-500 text-sm mt-1"><%= article.created_at.strftime("%B %d, %Y") %></p>
+    <% if @articles.any? %>
+      <div class="border-t border-gray-200">
+        <% @articles.each do |article| %>
+          <div class="py-5">
+            <div class="flex justify-between items-center">
+              <h3 class="text-lg font-semibold text-gray-800">
+                <%= link_to article.title, article_path(article), class: "hover:text-indigo-600 transition-colors duration-300", data: { turbo_frame: "_top" } %>
+              </h3>
+              <p class="text-sm text-gray-500 whitespace-nowrap ml-4"><%= article.created_at.strftime("%B %d, %Y") %></p>
+            </div>
           </div>
+          <div class="border-b border-gray-200"></div>
         <% end %>
       </div>
     <% else %>
-      <p class="text-gray-500 italic">This user hasn’t published any articles yet.</p>
+      <div class="text-center py-10 px-6 bg-gray-50 rounded-lg border">
+        <p class="text-gray-600">This user hasn’t published any articles yet.</p>
+      </div>
+    <% end %>
+  </div>
+  <div class="mt-8">
+    <% if @pagy.present? && @pagy.pages > 1 %>
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+
+        <div class="text-sm text-gray-700">
+          <%== pagy_info(@pagy) %>
+        </div>
+
+        <div>
+          <%# Make sure to use the pagy_tailwind_nav helper for Tailwind styles %>
+          <%== pagy_nav(@pagy) %>
+        </div>
+
+      </div>
     <% end %>
   </div>
 </div>

@@ -6,6 +6,7 @@ class UsersController < ApplicationController
   end
   def show
     authorize @user
+    @pagy, @articles = pagy(@user.articles.kept.order(created_at: :desc), items: 5)
   end
   def edit
     authorize @user
@@ -39,6 +40,6 @@ class UsersController < ApplicationController
     params.require(:user).permit(:user_name, :name,:email, :password, :password_confirmation,:bio, :profile_picture)
   end
   def set_user
-    @user = User.friendly.find(params[:id])
+    @user = User.kept.friendly.find(params[:id])
   end
 end

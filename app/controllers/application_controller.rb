@@ -5,14 +5,18 @@ class ApplicationController < ActionController::Base
   include Pundit::Authorization
   include Pagy::Backend
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
+  def not_found
+    render file: Rails.root.join("public/404.html"), status: :not_found, layout: false
+  end
   private
   def current_user
     # return @current_user if defined?(@current_user)
 
     if session[:user_id]
       user = User.find_by(id: session[:user_id])
-      if user && session[:session_token] == user.session_token
+      if user&.kept? && session[:session_token] == user.session_token
         @current_user ||= user
       else
         log_out_user
@@ -20,7 +24,7 @@ class ApplicationController < ActionController::Base
       end
     elsif (user_id = cookies.signed[:user_id])
       user = User.find_by(id: user_id)
-      if user&.authenticated?("remember",cookies.signed[:remember_token])
+      if user&.kept? && user.authenticated?("remember", cookies.signed[:remember_token])
         reset_session
         user.regenerate_session_token
         session[:session_token] = user.session_token
@@ -51,7 +55,12 @@ class ApplicationController < ActionController::Base
       redirect_to root_path, notice: "You are already logged in."
     end
   end
-
+  def log_in(user)
+    reset_session
+    user.regenerate_session_token
+    session[:session_token] = user.session_token
+    session[:user_id] = user.id
+  end
   def log_out
     forget(current_user) if current_user
     reset_session
@@ -85,4 +94,8 @@ class ApplicationController < ActionController::Base
     flash[:alert] = "You are not authorized to perform this action."
     redirect_back(fallback_location: root_path)
   end
+  def record_not_found(exception)
+    redirect_to root_path, notice: "#{exception.message} not found"
+  end
+
 end

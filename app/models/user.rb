@@ -1,11 +1,12 @@
 class User < ApplicationRecord
+  include Discard::Model
   extend FriendlyId
   friendly_id :user_name, use: [ :slugged, :history ]
   attr_accessor :remember_token, :reset_token
   has_one_attached :profile_picture
   has_secure_password
   enum :role, { member: 0, editor: 1, admin: 2 }
-
+  before_validation :reject_if_banned, on: :create
   validates :name, presence: true
   validates :user_name, presence: true, uniqueness: { case_sensitive: false },
             format: { with: /\A[a-z0-9_]+\z/, message: "only allows letters, numbers, and underscores" },
@@ -22,6 +23,14 @@ class User < ApplicationRecord
   has_many :clapped_articles, through: :claps, source: :article
   has_many :comments, dependent: :destroy
   has_many :reports, dependent: :destroy
+  after_discard do
+    articles.find_each(&:discard)
+    comments.find_each(&:discard)
+  end
+  after_undiscard do
+    articles.find_each(&:undiscard)
+    comments.find_each(&:undiscard)
+  end
   def self.new_token
     SecureRandom.urlsafe_base64(32)
   end
@@ -83,6 +92,12 @@ class User < ApplicationRecord
     end
     unless password.match?(/[^A-Za-z\d]/)
       errors.add :password, "must include at least one special character i.e. (*, #, $ etc)"
+    end
+  end
+  def reject_if_banned
+    if User.discarded.exists?(email: email) || User.discarded.exists?(user_name: user_name)
+      errors.add(:base, "This account is banned. Please use another email/username.")
+      throw(:abort)
     end
   end
 end

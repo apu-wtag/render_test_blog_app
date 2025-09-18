@@ -1,5 +1,5 @@
 class Admin::UsersController < Admin::BaseController
-  before_action :set_user, only: [ :destroy, :update_role]
+  before_action :set_user, only: [ :destroy, :restore, :update_role]
   def index
     @users = User.order(:name)
     if params[:query].present?
@@ -10,10 +10,18 @@ class Admin::UsersController < Admin::BaseController
     if @user == current_user
       redirect_to admin_users_path, notice: "You cannot delete your own account."
     else
-      @user.destroy
+      @user.discard
       redirect_to admin_users_path, notice: "User was successfully deleted."
     end
   end
+  def restore
+    if @user.undiscard
+      redirect_to admin_users_path, notice: "User #{@user.name} was successfully restored."
+    else
+      redirect_to admin_users_path, alert: "Failed to restore user."
+    end
+  end
+
   def update_role
     if @user.update(role_params)
       redirect_to admin_users_path, notice: "#{@user.name}'s role was updated to #{@user.role}."

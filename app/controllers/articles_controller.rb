@@ -9,7 +9,7 @@ class ArticlesController < ApplicationController
     @scope = params[:scope] || 'articles'
 
     if @scope == 'articles'
-      articles = policy_scope(Article)
+      articles = policy_scope(Article).kept
       articles = articles.includes(user: { profile_picture_attachment: :blob })
       if @query.present?
         search_query = "%#{@query}%"
@@ -20,7 +20,7 @@ class ArticlesController < ApplicationController
       end
       @pagy, @results = pagy(articles.order(created_at: :desc), items: 10)
     elsif @scope == 'people'
-      users = policy_scope(User) rescue User.all
+      users = policy_scope(User) rescue User.kept
       users = users.includes(profile_picture_attachment: :blob)
       if @query.present?
         search_query = "%#{@query}%"
@@ -34,6 +34,10 @@ class ArticlesController < ApplicationController
   # GET /articles/1 or /articles/1.json
   def show
     authorize @article
+    @comments = @article.comments.kept.where(parent_id: nil)
+                        .includes(user: { profile_picture_attachment: :blob },
+                                  replies: { user: { profile_picture_attachment: :blob } })
+                        .order(created_at: :desc)
   end
 
   # GET /articles/new
@@ -79,7 +83,7 @@ class ArticlesController < ApplicationController
   # DELETE /articles/1 or /articles/1.json
   def destroy
     authorize @article
-    @article.destroy!
+    @article.discard
 
     respond_to do |format|
       format.html { redirect_to articles_path, notice: "Article was successfully destroyed.", status: :see_other }
@@ -161,7 +165,7 @@ class ArticlesController < ApplicationController
 
   private
     def set_article
-      @article = Article.friendly.find(params.expect(:id))
+      @article = Article.kept.friendly.find(params.expect(:id))
       # If an old id or a numeric id was used to find the record, then
       # the request path will not match the post_path, and we should do
       # a 301 redirect that uses the current friendly id.

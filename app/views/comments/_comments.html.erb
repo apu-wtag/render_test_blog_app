@@ -1,7 +1,7 @@
 <%= turbo_frame_tag "comments_section" do %>
   <div class="space-y-6">
     <h2 id="comment-count-<%= article.id %>" class="text-xl font-bold text-gray-900 border-b pb-3">
-      Comments (<%= article.comments.count %>)
+      Comments (<%= article.comments.kept.count %>)
     </h2>
 
     <!-- New Comment Form -->
@@ -24,7 +24,7 @@
 
     <!-- Comment List -->
     <div id="comments" class="space-y-6">
-      <% article.comments.where(parent_id: nil).order(created_at: :desc).each do |comment| %>
+      <% @comments.each do |comment| %>
         <%= render 'comments/comment', comment: comment %>
       <% end %>
     </div>

@@ -8,11 +8,11 @@
     <%# end %>
   <%# end %>
   <%= turbo_stream.replace "reply-count-#{@comment.parent_id}" do %>
-    <% if @comment.parent.replies.any? %>
+    <% if @comment.parent.replies.kept.any? %>
       <button id="reply-count-<%= @comment.parent.id %>"
               data-action="click->comments#toggleReplies"
               class="font-medium text-indigo-600 hover:underline">
-        View <%= pluralize(@comment.parent.replies.count, 'reply') %>
+        View <%= pluralize(@comment.parent.replies.kept.count, 'reply') %>
       </button>
     <% else %>
       <span id="reply-count-<%= @comment.parent.id %>" class="hidden"></span>
@@ -34,5 +34,5 @@
   <% end %>
 <% end %>
 <%= turbo_stream.update "comment-count-#{@article.id}" do %>
-  Comments (<%= @article.comments.count %>)
+  Comments (<%= @article.comments.kept.count %>)
 <% end %>

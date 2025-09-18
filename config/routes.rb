@@ -42,9 +42,10 @@ Rails.application.routes.draw do
   namespace :admin do
     root "dashboard#index"
     resource :moderation, only: [:show]
-    resources :users, only: [ :index, :destroy ] do
+    resources :users, only: [ :index, :destroy] do
       member do
         patch :update_role
+        patch :restore
       end
     end
     resources :articles, only: [ :destroy ] do
@@ -64,4 +65,5 @@ Rails.application.routes.draw do
   end
   # dashboard
   root "articles#index"
+  match "*path", to: "application#not_found", via: :all, constraints: ->(req) { !req.path.start_with?('/rails/active_storage') }
 end

@@ -7,6 +7,10 @@
   <%= link_to user_path(article.user), class: "flex items-center space-x-3 mb-10 group hover:bg-gray-50 rounded-md p-1" do %>
     <% if article.user.profile_picture.attached? %>
       <%= image_tag article.user.profile_picture, class: "h-10 w-10 rounded-full object-cover" %>
+    <% else %>
+      <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-semibold">
+        <%= article.user.name.first.upcase %>
+      </div>
     <% end %>
 
     <div>

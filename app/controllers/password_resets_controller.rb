@@ -7,13 +7,19 @@ class PasswordResetsController < ApplicationController
   def new
   end
   def create
-    @user = User.find_by(email: params[:password_reset][:email])
-    if @user
-      @user.create_reset_digest
-      # puts "xxxx #{@user.reset_token} xxxx"
-      ResetMailerJob.perform_async(@user.id, @user.reset_token)
+    email = params[:password_reset][:email].to_s.strip.downcase
+    user  = User.find_by(email: email)
+    if user
+      if user.kept?
+        user.create_reset_digest
+        ResetMailerJob.perform_async(user.id, user.reset_token)
+        redirect_to login_path, notice: "We have sent a password reset link, Please check your email."
+      else
+        redirect_to sign_up_path, alert: "This account has been banned. Please use another email or username to sign up."
+      end
+    else
+      redirect_to login_path, notice: "If an account with that email exists, we have sent a password reset link."
     end
-    redirect_to login_path, notice: "If an account with that email exists, we have sent a password reset link."
   end
 
   def edit
@@ -24,11 +30,8 @@ class PasswordResetsController < ApplicationController
       @user.errors.add(:password, "can't be blank")
       render :edit, status: :unprocessable_entity and return
     elsif @user.update(user_params)
-      @user.regenerate_session_token
-      @user.forget
-      reset_session
-      @user.update!(reset_digest: nil, reset_sent_at: nil)
-      # puts  "Testing for debug"
+      log_out if current_user
+      @user.update_columns(reset_digest: nil, reset_sent_at: nil)
       redirect_to login_path, notice: "Password successfully updated.Please login again."
     else
       render :edit, status: :unprocessable_entity
@@ -38,7 +41,7 @@ class PasswordResetsController < ApplicationController
   def get_user
     email = params[:email] || params.dig(:user, :email)
     if email
-      @user = User.find_by(email: email.downcase)
+      @user = User.kept.find_by(email: email.downcase)
     end
 
   end

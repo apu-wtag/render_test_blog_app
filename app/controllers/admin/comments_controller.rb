@@ -2,7 +2,7 @@ class Admin::CommentsController < Admin::BaseController
   before_action :set_comment, only: [:destroy, :resolve_reports, :dismiss_reports]
   def destroy
     @comment.reports.pending.update_all(status: :resolved)
-    @comment.destroy
+    @comment.discard
     redirect_to admin_moderation_path(scope: "comments"), notice: "Comment was successfully deleted and reports were resolved."
   end
   def resolve_reports
@@ -15,7 +15,7 @@ class Admin::CommentsController < Admin::BaseController
   end
   private
   def set_comment
-    @comment = Comment.find(params[:id])
+    @comment = Comment.kept.find(params[:id])
   end
 
 end

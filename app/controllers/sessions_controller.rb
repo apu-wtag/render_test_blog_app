@@ -14,27 +14,22 @@ class SessionsController < ApplicationController
     # user = User.find_by(email: email_or_username) || User.find_by(user_name: email_or_username)
     user = User.where("email = ? OR user_name = ?", email_or_username, email_or_username).first
     if user&.authenticate(password)
-      reset_session
-      user.regenerate_session_token
-      session[:session_token] = user.session_token
-      session[:user_id] = user.id
-      params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-      # # --- DEBUGGING LINES START ---
-      # puts "----------------------------------------"
-      # puts "DEBUG: remember_me value is: '#{params[:session][:remember_me]}'"
-      # puts "DEBUG: Does it equal '1'? #{params[:session][:remember_me] == '1'}"
-      # puts "----------------------------------------"
-      # # --- DEBUGGING LINES END ---
-      redirect_to "/", notice: "Logged in!"
+      if user.kept?
+        log_in(user)
+        params[:session][:remember_me] == '1' ? remember(user) : forget(user)
+        redirect_to "/", notice: "Logged in!"
+      else
+        flash.now[:danger] = "This account is banned"
+        render :new, status: :unprocessable_entity
+      end
     else
-      flash.now[:danger] = "Invalid email/password combination"
+      flash.now[:danger] = "Invalid email/username or password."
       render :new, status: :unprocessable_entity
     end
   end
 
   def destroy
     log_out
-    session.delete :user_id
     redirect_to "/login", notice: "Logged out!"
   end
 

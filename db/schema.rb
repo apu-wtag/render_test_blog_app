@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_17_031127) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_18_062234) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,6 +62,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_17_031127) do
     t.bigint "user_id", null: false
     t.integer "claps_count", default: 0, null: false
     t.integer "comments_count", default: 0, null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_articles_on_discarded_at"
     t.index ["slug"], name: "index_articles_on_slug", unique: true
     t.index ["topic_id"], name: "index_articles_on_topic_id"
     t.index ["user_id"], name: "index_articles_on_user_id"
@@ -84,7 +86,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_17_031127) do
     t.bigint "parent_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
     t.index ["article_id"], name: "index_comments_on_article_id"
+    t.index ["discarded_at"], name: "index_comments_on_discarded_at"
     t.index ["parent_id"], name: "index_comments_on_parent_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
@@ -137,6 +141,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_17_031127) do
     t.text "bio"
     t.string "slug"
     t.integer "role", default: 0, null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["slug"], name: "index_users_on_slug", unique: true
     t.index ["user_name"], name: "index_users_on_user_name", unique: true
