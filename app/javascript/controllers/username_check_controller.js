@@ -18,7 +18,7 @@ export default class extends Controller {
     this.feedbackTarget.innerHTML = "<span class='text-gray-500'>Checking...</span>"
 
     this.timeout = setTimeout(() => {
-        const currentId = this.element.dataset.currentId
+        const currentId = this.element.dataset.currentId || ""
         fetch(`/users/check_username?user_name=${encodeURIComponent(username)}&current_id=${currentId}`)
           .then(response => response.json())
           .then(data => {
