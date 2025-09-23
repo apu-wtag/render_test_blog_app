@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :clap do
-    user { nil }
-    article { nil }
+    association :user
+    association :article
   end
 end

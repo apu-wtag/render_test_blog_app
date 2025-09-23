@@ -1,5 +1,6 @@
 class Comment < ApplicationRecord
   include Discard::Model
+  validates :body, presence: true
   belongs_to :user
   belongs_to :article, counter_cache: true
   belongs_to :parent, class_name: "Comment", optional: true
