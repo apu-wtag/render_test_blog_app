@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     authorize @user
     @pagy_kept, @articles = pagy(@user.articles.kept.order(created_at: :desc),
                                  items: 5, page_param: :kept_page)
-    @pagy_discarded, @discarded_articles = pagy(@user.articles.discarded.order(discarded_at: :desc),
+    @pagy_discarded, @discarded_articles = pagy(@user.articles.not_archived.discarded.order(discarded_at: :desc),
                                                 items: 5, page_param: :discarded_page)
 
   end

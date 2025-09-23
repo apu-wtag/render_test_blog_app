@@ -74,7 +74,7 @@ class Admin::ArticlesController < Admin::BaseController
   private
   def set_article
     scope = if action_name.in?(%w[hide new_hide approve_restoration new_rejection reject_restoration])
-              Article.all
+              Article.not_archived
     else
               Article.kept
     end

@@ -21,6 +21,10 @@ class Article < ApplicationRecord
   belongs_to :topic
   belongs_to :user
 
+  scope :archived, -> { where.not(archived_at: nil) }
+  scope :not_archived, -> { where(archived_at: nil) }
+  scope :kept, -> { undiscarded.not_archived }
+
   def topic_name
     @topic_name || self.topic&.name
   end

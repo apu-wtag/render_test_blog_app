@@ -23,7 +23,7 @@ class ArticlePolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       if user&.admin?
-        scope.with_discarded
+        scope.with_discarded.not_archived
       else
         scope.kept
       end

@@ -91,7 +91,7 @@ class ArticlesController < ApplicationController
   # DELETE /articles/1 or /articles/1.json
   def destroy
     authorize @article
-    @article.destroy!
+    @article.update(archived_at: Time.current)
 
     respond_to do |format|
       format.html { redirect_to articles_path, notice: "Article was successfully destroyed.", status: :see_other }
@@ -172,7 +172,7 @@ class ArticlesController < ApplicationController
 
   private
     def set_article
-      @article = Article.all.friendly.find(params.expect(:id))
+      @article = Article.not_archived.friendly.find(params.expect(:id))
       # If an old id or a numeric id was used to find the record, then
       # the request path will not match the post_path, and we should do
       # a 301 redirect that uses the current friendly id.

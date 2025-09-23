@@ -23,7 +23,7 @@ class ReportsController < ApplicationController
     if params[:comment_id]
       @reportable = Comment.find(params[:comment_id])
     elsif params[:article_id]
-      @reportable = Article.friendly.find(params[:article_id])
+      @reportable = Article.not_archived.friendly.find(params[:article_id])
     end
   end
   def reportable_redirect_path
