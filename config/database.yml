@@ -81,9 +81,11 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: blog_app_final_production
-    username: blog_app_final
-    password: <%= ENV["BLOG_APP_FINAL_DATABASE_PASSWORD"] %>
+    database: render_test_blog_app
+    username: render_test_blog_app_user
+    password: <%= ENV["RENDER_TEST_BLOG_APP_DATABASE_PASSWORD"] %>
+    host: dpg-d3cekdl6ubrc73en9nj0-a
+    port: 5432
   cache:
     <<: *primary_production
     database: blog_app_final_production_cache
