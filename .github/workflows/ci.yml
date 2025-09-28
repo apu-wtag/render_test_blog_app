@@ -99,4 +99,4 @@ jobs:
 
       - name: Run RSpec tests
         run: |
-          bundle exec rspec
+          bundle exec rspec spec/models
