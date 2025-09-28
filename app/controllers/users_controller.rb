@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :require_no_login, only: [:new, :create]
-  before_action :set_user, only: [:show, :edit, :update]
+  before_action :require_no_login, only: [ :new, :create ]
+  before_action :set_user, only: [ :show, :edit, :update ]
   def new
     @user = User.new
   end
@@ -10,7 +10,6 @@ class UsersController < ApplicationController
                                  items: 5, page_param: :kept_page)
     @pagy_discarded, @discarded_articles = pagy(@user.articles.not_archived.discarded.order(discarded_at: :desc),
                                                 items: 5, page_param: :discarded_page)
-
   end
   def edit
     authorize @user
@@ -43,7 +42,7 @@ class UsersController < ApplicationController
 
   private
   def user_params
-    params.require(:user).permit(:user_name, :name,:email, :password, :password_confirmation,:bio, :profile_picture)
+    params.require(:user).permit(:user_name, :name, :email, :password, :password_confirmation, :bio, :profile_picture)
   end
   def set_user
     @user = User.kept.friendly.find(params[:id])

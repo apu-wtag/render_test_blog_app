@@ -1,8 +1,8 @@
 class PasswordResetsController < ApplicationController
-  before_action :get_user , only: [:edit, :update]
-  before_action :valid_user, only: [:edit, :update]
-  before_action :check_expiration, only: [:edit, :update]
-  before_action :log_out_if_different_user, only: [:edit, :update]
+  before_action :get_user, only: [ :edit, :update ]
+  before_action :valid_user, only: [ :edit, :update ]
+  before_action :check_expiration, only: [ :edit, :update ]
+  before_action :log_out_if_different_user, only: [ :edit, :update ]
   # before_action :log_in_if_expired, only: [:edit, :update]
   def new
   end
@@ -43,7 +43,6 @@ class PasswordResetsController < ApplicationController
     if email
       @user = User.kept.find_by(email: email.downcase)
     end
-
   end
   def valid_user
     unless @user&.authenticated?(:reset, params[:id])

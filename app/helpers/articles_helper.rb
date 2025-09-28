@@ -18,26 +18,26 @@ module ArticlesHelper
         "<pre><code class=\"language-#{language}\">#{escaped_code}</code></pre>"
 
       when "image"
-        data = block['data']
-        file = data['file']
-        caption = CGI.escapeHTML(data['caption'] || '')
-        with_border = data['withBorder'] ? 'border border-gray-300 rounded' : ''
-        with_background = data['withBackground'] ? 'bg-gray-100 p-4' : ''
-        stretched = data['stretched'] ? 'w-full mx-auto' : 'max-w-3xl mx-auto'
+        data = block["data"]
+        file = data["file"]
+        caption = CGI.escapeHTML(data["caption"] || "")
+        with_border = data["withBorder"] ? "border border-gray-300 rounded" : ""
+        with_background = data["withBackground"] ? "bg-gray-100 p-4" : ""
+        stretched = data["stretched"] ? "w-full mx-auto" : "max-w-3xl mx-auto"
         "<figure class=\"#{stretched} my-8\"><img src=\"#{file['url']}\" alt=\"#{caption}\" class=\"w-full h-auto #{with_border} #{with_background}\"><figcaption class=\"text-center text-gray-500 mt-2\">#{caption}</figcaption></figure>"
 
       when "attaches"
-        data = block['data']
-        file = data['file']
-        title = CGI.escapeHTML(data['title'] || file['name'])
+        data = block["data"]
+        file = data["file"]
+        title = CGI.escapeHTML(data["title"] || file["name"])
         "<div class=\"my-4\"><a href=\"#{file['url']}\" download class=\"text-blue-600 hover:underline\">#{title} (#{file['extension']}, #{number_to_human_size(file['size'])})</a></div>"
 
       when "embed"
-        data = block['data']
+        data = block["data"]
         "<div class=\"my-8 max-w-3xl mx-auto\"><iframe src=\"#{data['embed']}\" width=\"#{data['width']}\" height=\"#{data['height']}\" frameborder=\"0\" allowfullscreen class=\"w-full\"></iframe><p class=\"text-center text-gray-500 mt-2\">#{CGI.escapeHTML(data['caption'] || '')}</p></div>"
 
       when "quote"
-        data = block['data']
+        data = block["data"]
         if data["caption"] != ""
           "<blockquote class=\"my-8 border-l-4 border-gray-300 pl-4 italic text-gray-700\">#{data['text']}<cite class=\"block text-right mt-2 text-gray-500\">— #{CGI.escapeHTML(data['caption'])}</cite></blockquote>"
         else
@@ -47,9 +47,9 @@ module ArticlesHelper
       when "delimiter"
         "<div class=\"my-8 text-center text-3xl tracking-wider text-black-300\">***</div>"
       when "table"
-        data = block['data']
-        content = data['content']
-        with_headings = data['withHeadings']
+        data = block["data"]
+        content = data["content"]
+        with_headings = data["withHeadings"]
         table_rows = content.map.with_index do |row, index|
           cells = row.map do |cell|
             # Sanitize cell content to allow b, i, a tags
@@ -91,7 +91,7 @@ module ArticlesHelper
         end
         break if summary_text.length >= length
       end
-      return truncate(summary_text, length: length, separator: ' ')
+      truncate(summary_text, length: length, separator: " ")
     rescue StandardError => e
       Rails.logger.error "Failed to parse article summary: #{e.message}"
       ""

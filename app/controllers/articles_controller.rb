@@ -112,7 +112,7 @@ class ArticlesController < ApplicationController
         }
       }
     else
-      render json: {success: 0, message: "No file provided"}, status: :unprocessable_entity
+      render json: { success: 0, message: "No file provided" }, status: :unprocessable_entity
     end
   end
 
@@ -129,7 +129,7 @@ class ArticlesController < ApplicationController
         success: 1,
         file: {
           url: url_for(blob),
-          signed_id: blob.signed_id 
+          signed_id: blob.signed_id
         }
       }
     else

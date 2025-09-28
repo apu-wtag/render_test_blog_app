@@ -1,5 +1,5 @@
 class Admin::UsersController < Admin::BaseController
-  before_action :set_user, only: [ :destroy, :restore, :update_role]
+  before_action :set_user, only: [ :destroy, :restore, :update_role ]
   def index
     @users = User.order(:name)
     if params[:query].present?

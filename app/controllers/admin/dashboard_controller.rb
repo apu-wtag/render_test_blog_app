@@ -10,10 +10,10 @@ class Admin::DashboardController < Admin::BaseController
     @articles_per_week = Article.not_archived.group_by_week(:created_at).count
     # Moderation Queue (10 most recent pending reports)
     # @pending_reports = Report.pending.includes(:user, reportable: [:user]).order(created_at: :desc).limit(10)
-    reported_article_ids = Report.pending.where(reportable_type: 'Article').pluck(:reportable_id)
+    reported_article_ids = Report.pending.where(reportable_type: "Article").pluck(:reportable_id)
     review_article_ids = ModerationRecord.pending_review.pluck(:article_id)
     all_article_ids = (reported_article_ids + review_article_ids).uniq
-    reported_comment_ids = Report.pending.where(reportable_type: 'Comment').pluck(:reportable_id)
+    reported_comment_ids = Report.pending.where(reportable_type: "Comment").pluck(:reportable_id)
     @actionable_articles = Article.not_archived.where(id: all_article_ids)
                                   .includes(:user).order(updated_at: :desc).limit(5)
     @actionable_comments = Comment.with_discarded.where(id: reported_comment_ids)

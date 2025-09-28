@@ -13,7 +13,7 @@ class User < ApplicationRecord
             length: { minimum: 3 }
 
   validates :bio, allow_blank: true, length: { maximum: 500 }
-  validates :email, presence: true, uniqueness: { case_sensitive: false },format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :email, presence: true, uniqueness: { case_sensitive: false }, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, presence: true, length: { minimum: 8 }, if: -> { new_record? || !password.nil? }
   validate :password_complexity, if: -> { new_record? || !password.nil? }
 
@@ -43,7 +43,7 @@ class User < ApplicationRecord
 
   def remember
     self.remember_token = User.new_token
-    #fixxxxx
+    # fixxxxx
     update_attribute(:remember_digest, User.digest(remember_token))
     update_attribute(:remember_expires_at, 30.days.from_now)
   end

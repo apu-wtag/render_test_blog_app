@@ -1,7 +1,7 @@
 class Article < ApplicationRecord
   include Discard::Model
   extend FriendlyId
-  friendly_id :title, use: [:slugged, :history]
+  friendly_id :title, use: [ :slugged, :history ]
   attr_writer :topic_name
   attr_accessor :author_note
 
@@ -35,7 +35,7 @@ class Article < ApplicationRecord
     return [] if content.blank?
     begin
       JSON.parse(content)["blocks"]
-        .filter { |block| ["image", "attaches"].include?(block["type"]) }
+        .filter { |block| [ "image", "attaches" ].include?(block["type"]) }
         .map { |block| block.dig("data", "file", "signed_id") }
         .flatten  # <-- THIS IS THE FIX: Flattens any nested arrays from bad data
         .compact  # Remove any nils
@@ -105,7 +105,7 @@ class Article < ApplicationRecord
       # Use insert_all for one fast SQL query
       ArticleBlobLink.insert_all(
         new_links,
-        unique_by: [:article_id, :active_storage_blob_id]
+        unique_by: [ :article_id, :active_storage_blob_id ]
       )
 
       # ArticleBlobLink.insert_all(new_links, unique_by: :index_article_blob_links_on_article_id_and_active_storage_blob_id)

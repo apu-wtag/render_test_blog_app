@@ -27,7 +27,6 @@ class ArticlePolicy < ApplicationPolicy
       else
         scope.kept
       end
-
     end
   end
 end

@@ -1,5 +1,5 @@
 class Admin::CommentsController < Admin::BaseController
-  before_action :set_comment, only: [:destroy, :resolve_reports, :dismiss_reports]
+  before_action :set_comment, only: [ :destroy, :resolve_reports, :dismiss_reports ]
   def destroy
     @comment.reports.pending.update_all(status: :resolved)
     @comment.discard
@@ -17,5 +17,4 @@ class Admin::CommentsController < Admin::BaseController
   def set_comment
     @comment = Comment.kept.find(params[:id])
   end
-
 end

@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
 
   def require_login
     unless current_user
-      redirect_to login_path , alert: "You must be logged in to access this page."
+      redirect_to login_path, alert: "You must be logged in to access this page."
     end
   end
 
@@ -97,5 +97,4 @@ class ApplicationController < ActionController::Base
   def record_not_found(exception)
     redirect_to root_path, notice: "#{exception.message} not found"
   end
-
 end

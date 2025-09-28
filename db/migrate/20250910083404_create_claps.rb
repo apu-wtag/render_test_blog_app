@@ -6,6 +6,6 @@ class CreateClaps < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    add_index :claps, [:user_id, :article_id], unique: true
+    add_index :claps, [ :user_id, :article_id ], unique: true
   end
 end

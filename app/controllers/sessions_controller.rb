@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  before_action :require_no_login, only: [:new, :create]
+  before_action :require_no_login, only: [ :new, :create ]
   def new
     errors = []
   end
@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
     if user&.authenticate(password)
       if user.kept?
         log_in(user)
-        params[:session][:remember_me] == '1' ? remember(user) : forget(user)
+        params[:session][:remember_me] == "1" ? remember(user) : forget(user)
         redirect_to "/", notice: "Logged in!"
       else
         flash.now[:danger] = "This account is banned"
@@ -32,5 +32,4 @@ class SessionsController < ApplicationController
     log_out
     redirect_to "/login", notice: "Logged out!"
   end
-
 end

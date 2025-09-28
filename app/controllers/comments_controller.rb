@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
   before_action :require_login
-  before_action :set_article , only: [ :create, :edit, :update, :destroy ]
+  before_action :set_article, only: [ :create, :edit, :update, :destroy ]
   before_action :set_comment, only: [ :edit, :update, :destroy ]
 
   def create
@@ -11,9 +11,9 @@ class CommentsController < ApplicationController
       respond_to do |format|
         format.turbo_stream
       end
-      else
+    else
         redirect_to @article, alert: "Comment cant be created"
-      end
+    end
   end
   def edit
     authorize @comment

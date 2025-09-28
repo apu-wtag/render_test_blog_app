@@ -1,7 +1,6 @@
 namespace :cleanup_blob do
   desc "Purge old blobs that are not formally attached OR referenced by any article link."
   task purge_unattached_blobs: :environment do
-
     puts "Building allow lists from database..."
 
     # 1. Get ALL blob IDs formally attached to ANY model (e.g., User avatars)

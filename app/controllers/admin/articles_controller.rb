@@ -1,5 +1,5 @@
 class Admin::ArticlesController < Admin::BaseController
-  before_action :set_article, only: [:destroy, :resolve_reports, :dismiss_reports, :new_hide, :hide, :approve_restoration, :new_rejection, :reject_restoration ]
+  before_action :set_article, only: [ :destroy, :resolve_reports, :dismiss_reports, :new_hide, :hide, :approve_restoration, :new_rejection, :reject_restoration ]
   def destroy
     @article.reports.pending.update_all(status: :resolved)
     @article.discard

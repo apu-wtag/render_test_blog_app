@@ -1,12 +1,12 @@
-require 'sidekiq/web'
+require "sidekiq/web"
 Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
   # sidekiq
-  mount Sidekiq::Web => '/sidekiq'
+  mount Sidekiq::Web => "/sidekiq"
   # signup routes
-  get "sign_up",to: "users#new"
+  get "sign_up", to: "users#new"
   post "sign_up", to: "users#create"
-  resources :users, only: [ :show, :edit, :update] do
+  resources :users, only: [ :show, :edit, :update ] do
     collection do
       get :check_username
     end
@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   delete "logout", to: "sessions#destroy"
 
   # password reset routes
-  resources :password_resets, only: [:new, :create, :edit, :update,]
+  resources :password_resets, only: [ :new, :create, :edit, :update ]
 
   # article resources
   resources :articles do
@@ -32,9 +32,9 @@ Rails.application.routes.draw do
       post :upload_file
     end
     resources :comments, only: [ :create, :edit, :update, :destroy ] do
-      resources :reports, only: [:new, :create], shallow: true
+      resources :reports, only: [ :new, :create ], shallow: true
     end
-    resources :reports, only: [:new, :create], shallow: true
+    resources :reports, only: [ :new, :create ], shallow: true
   end
 
   # topic resources
@@ -43,8 +43,8 @@ Rails.application.routes.draw do
   # Admin resources
   namespace :admin do
     root "dashboard#index"
-    resource :moderation, only: [:show]
-    resources :users, only: [ :index, :destroy] do
+    resource :moderation, only: [ :show ]
+    resources :users, only: [ :index, :destroy ] do
       member do
         patch :update_role
         patch :restore
@@ -62,15 +62,15 @@ Rails.application.routes.draw do
       end
     end
     # Comments resources
-    resources :comments, only: [ :destroy] do
+    resources :comments, only: [ :destroy ] do
       member do
         patch :resolve_reports
         patch :dismiss_reports
       end
-      resources :reports, only: [:new, :create], shallow: true
+      resources :reports, only: [ :new, :create ], shallow: true
     end
   end
   # dashboard
   root "articles#index"
-  match "*path", to: "application#not_found", via: :all, constraints: ->(req) { !req.path.start_with?('/rails/active_storage') }
+  match "*path", to: "application#not_found", via: :all, constraints: ->(req) { !req.path.start_with?("/rails/active_storage") }
 end

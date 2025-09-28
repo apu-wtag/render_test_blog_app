@@ -1,5 +1,5 @@
 class UserMailer < ApplicationMailer
-  def password_reset(user,token)
+  def password_reset(user, token)
     @user = user
     @token = token
     # puts "pppp #{token} pppp"
